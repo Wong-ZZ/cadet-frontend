@@ -47,6 +47,44 @@ function* backendSaga(): SagaIterator {
     yield history.push('/academy');
   });
 
+  yield takeEvery(actionTypes.DELETE_ASSESSMENT, function*(
+    action: ReturnType<typeof actions.deleteAssessment>
+  ) {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+    const id = action.payload;
+    const resp: Response = yield request.deleteAssessment(id, tokens);
+
+    if(!resp || !resp.ok) {
+      yield request.handleResponseError(resp);
+      return;
+    }
+
+    yield put(actions.fetchAssessmentOverviews());
+    yield call(showSuccessMessage, 'Deleted successfully!', 1000);
+  });
+
+  yield takeEvery(actionTypes.UPLOAD_ASSESSMENT, function*(
+    action: ReturnType<typeof actions.uploadAssessment>
+  ) {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+    const file = action.payload;
+    const resp: Response = yield request.uploadAssessment(file, tokens);
+
+    if(!resp || !resp.ok) {
+      yield request.handleResponseError(resp);
+      return;
+    }
+
+    yield put(actions.fetchAssessmentOverviews());
+    yield call(showSuccessMessage, 'Uploaded successfully!', 1000);
+  });
+
   yield takeEvery(actionTypes.FETCH_ASSESSMENT_OVERVIEWS, function*() {
     const tokens = yield select((state: IState) => ({
       accessToken: state.session.accessToken,

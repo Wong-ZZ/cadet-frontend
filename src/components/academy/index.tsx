@@ -3,7 +3,9 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 
 import Grading from '../../containers/academy/grading';
 import AssessmentContainer from '../../containers/assessment';
+import Dashboard from '../../containers/dashboard/DashboardContainer';
 import Game from '../../containers/GameContainer';
+import GroundControl from '../../containers/groundControl/GroundControlContainer';
 import MaterialUpload from '../../containers/material/MaterialUploadContainer';
 import Sourcereel from '../../containers/sourcecast/SourcereelContainer';
 import { isAcademyRe } from '../../reducers/session';
@@ -76,7 +78,9 @@ class Academy extends React.Component<IAcademyProps> {
             )}/${assessmentRegExp}`}
             render={assessmentRenderFactory(AssessmentCategories.Practical)}
           />
-
+          
+          <Route path="/academy/groundcontrol" component={GroundControl} />
+          <Route path="/academy/dashboard" component={Dashboard} />
           <Route path={`/academy/grading/${gradingRegExp}`} component={Grading} />
           <Route path={'/academy/material'} component={MaterialUpload} />
           <Route path="/academy/sourcereel" component={Sourcereel} />
