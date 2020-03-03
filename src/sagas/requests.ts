@@ -103,6 +103,18 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
+export async function publishAssessment(id: number, bool: boolean, tokens: Tokens) {
+    const resp = await request(`assessments/publish/${id}`, 'POST', {
+      accessToken: tokens.accessToken,
+      body: { bool },
+      noHeaderAccept: true,
+      refreshToken: tokens.refreshToken,
+      shouldAutoLogout: false,
+      shouldRefresh: true
+    });
+    return resp;
+  }
+
 export async function deleteAssessment(id: number, tokens: Tokens) {
   const resp = await request(`assessments/${id}`, 'DELETE', {
     accessToken: tokens.accessToken,

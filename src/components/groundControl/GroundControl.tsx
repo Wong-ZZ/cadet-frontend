@@ -9,11 +9,13 @@ import { IAssessmentOverview } from '../assessment/assessmentShape';
 import ContentDisplay from '../commons/ContentDisplay';
 import DeleteCell from './DeleteCell';
 import Dropzone from './Dropzone';
+import PublishCell from './PublishCell';
 
 export interface IDispatchProps {
     handleAssessmentOverviewFetch: () => void;
     handleDeleteAssessment: (id: number) => void;
     handleUploadAssessment: (file: File) => void;
+    handlePublishAssessment: (bool: boolean, id: number) => void;
 }
 
 export interface IStateProps {
@@ -55,6 +57,22 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
                 field: "maxXp"
             },
             {
+                headerName: "Publish",
+                field: '',
+                cellRendererFramework: PublishCell,
+                cellRendererParams: {
+                    handlePublishAssessment: this.props.handlePublishAssessment
+                },
+                width: 150,
+                suppressSorting: true,
+                suppressMovable: true,
+                suppressMenu: true,
+                cellStyle: {
+                    padding: 0
+                },
+                hide: !this.props.handlePublishAssessment
+            },
+            {
                 headerName: 'Delete',
                 field: '',
                 cellRendererFramework: DeleteCell,
@@ -77,7 +95,6 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
         if (this.gridApi && this.props.assessmentOverviews.length !== prevProps.assessmentOverviews.length) {
             this.gridApi.setRowData(this.sortByCategory());            
         }
-        console.log(this.props.assessmentOverviews);
     }
 
     public render() {

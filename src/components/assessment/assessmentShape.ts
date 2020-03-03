@@ -27,6 +27,7 @@ export interface IAssessmentOverview {
   xp: number;
   gradingStatus: GradingStatus;
   private?: boolean;
+  is_published?: boolean;
 }
 
 export enum AssessmentStatuses {

@@ -67,8 +67,7 @@ class Dashboard extends React.Component<IDashboardProps, State> {
         if (this.gridApi && this.props.gradingOverviews.length !== prevProps.gradingOverviews.length) {
             this.gridApi.setRowData(this.updateLeaderBoard());
         }
-        console.log(this.sortSubmissionsByGroup());
-        console.log(this.updateLeaderBoard());        
+     
     }
 
     public handleFetchGradingOverviews = () => {
@@ -112,9 +111,8 @@ class Dashboard extends React.Component<IDashboardProps, State> {
     private updateLeaderBoard = () => {
         const rawData: GradingOverview[] = this.sortSubmissionsByGroup();
         const filteredData: LeaderBoardInfo[] = [];
-        for(let i = 0; i < rawData.length; i++) {
-            const currentInput = rawData[i];
-            const index = parseInt(currentInput.groupName.slice(5), 10);
+        for(const current of rawData) {
+            const index = parseInt(current.groupName.slice(5), 10);
             if(filteredData[index] === undefined) {
                 filteredData[index] = {
                     groupName: "group" + index,
@@ -124,11 +122,11 @@ class Dashboard extends React.Component<IDashboardProps, State> {
                 };
             }
             const currentEntry = filteredData[index];
-            const gradingStatus = currentInput.gradingStatus;
-            if(gradingStatus === "none") {                               
+            const gradingStatus = current.gradingStatus;
+            if(gradingStatus === "none") {
                 currentEntry.numOfUngradedAssessments++; 
             } else {
-                currentEntry.gradeTotal += currentInput.currentGrade;                
+                currentEntry.gradeTotal += current.currentGrade;
             }
             currentEntry.totalNumOfAssessments++;
         }

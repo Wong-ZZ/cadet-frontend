@@ -21,6 +21,8 @@ export const fetchAnnouncements = () => action(actionTypes.FETCH_ANNOUNCEMENTS);
 
 export const fetchAssessment = (id: number) => action(actionTypes.FETCH_ASSESSMENT, id);
 
+export const publishAssessment = (bool: boolean, id: number) => action(actionTypes.PUBLISH_ASSESSMENT, { id, bool });
+
 export const fetchAssessmentOverviews = () => action(actionTypes.FETCH_ASSESSMENT_OVERVIEWS);
 
 export const fetchGrading = (submissionId: number) =>
