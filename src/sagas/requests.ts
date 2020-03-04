@@ -45,6 +45,7 @@ type RequestOptions = {
   refreshToken?: string;
   shouldAutoLogout?: boolean;
   shouldRefresh?: boolean;
+  mode?: string;
 };
 
 type Tokens = {
@@ -57,7 +58,8 @@ type Tokens = {
 export async function postAuth(luminusCode: string): Promise<Tokens | null> {
   const resp = await request('auth', 'POST', {
     body: { login: { luminus_code: luminusCode } },
-    errorMessage: 'Could not login. Please contact the module administrator.'
+    errorMessage: 'Could not login. Please contact the module administrator.',
+    mode: 'no-cors'
   });
   if (!resp) {
     return null;
@@ -100,6 +102,47 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   }
   return await resp.json();
 }
+
+export async function publishAssessment(id: number, bool: boolean, tokens: Tokens) {
+    const resp = await request(`assessments/publish/${id}`, 'POST', {
+      accessToken: tokens.accessToken,
+      body: { bool },
+      noHeaderAccept: true,
+      refreshToken: tokens.refreshToken,
+      shouldAutoLogout: false,
+      shouldRefresh: true
+    });
+    return resp;
+  }
+
+export async function deleteAssessment(id: number, tokens: Tokens) {
+  const resp = await request(`assessments/${id}`, 'DELETE', {
+    accessToken: tokens.accessToken,
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
+}
+
+export const uploadAssessment = async (
+  file: File,
+  tokens: Tokens
+) => {
+  const formData = new FormData();
+  formData.append('assessment[file]', file);
+  const resp = await request(`assessments`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: formData,
+    noContentType: true,
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
+};
 
 /**
  * GET /assessments
@@ -617,7 +660,7 @@ async function request(
   if (opts.accessToken) {
     headers.append('Authorization', `Bearer ${opts.accessToken}`);
   }
-  const fetchOpts: any = { method, headers };
+  const fetchOpts: any = { method, headers};
   if (opts.body) {
     if (opts.noContentType) {
       // Content Type is not needed for sending multipart data

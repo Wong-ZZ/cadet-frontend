@@ -11,11 +11,17 @@ import * as actionTypes from './actionTypes';
 
 import { Role } from '../reducers/states';
 
+export const deleteAssessment = (id: number) => action(actionTypes.DELETE_ASSESSMENT, id);
+
+export const uploadAssessment = (file: File) => action(actionTypes.UPLOAD_ASSESSMENT, file);
+
 export const fetchAuth = (luminusCode: string) => action(actionTypes.FETCH_AUTH, luminusCode);
 
 export const fetchAnnouncements = () => action(actionTypes.FETCH_ANNOUNCEMENTS);
 
 export const fetchAssessment = (id: number) => action(actionTypes.FETCH_ASSESSMENT, id);
+
+export const publishAssessment = (bool: boolean, id: number) => action(actionTypes.PUBLISH_ASSESSMENT, { id, bool });
 
 export const fetchAssessmentOverviews = () => action(actionTypes.FETCH_ASSESSMENT_OVERVIEWS);
 
