@@ -9,6 +9,7 @@ import { IAssessmentOverview } from '../assessment/assessmentShape';
 import ContentDisplay from '../commons/ContentDisplay';
 import DeleteCell from './DeleteCell';
 import Dropzone from './Dropzone';
+import EditCell from './EditCell';
 import PublishCell from './PublishCell';
 
 export interface IDispatchProps {
@@ -16,6 +17,7 @@ export interface IDispatchProps {
     handleDeleteAssessment: (id: number) => void;
     handleUploadAssessment: (file: File) => void;
     handlePublishAssessment: (bool: boolean, id: number) => void;
+    handleAssessmentChangeDate: (id:number, openAt: string, closeAt: string) => void;
 }
 
 export interface IStateProps {
@@ -42,11 +44,27 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
             },
             {
                 headerName: "Open Date",
-                field: "openAt"
+                field: "prettyOpenAt"
             },
             {
                 headerName: "Close Date",
-                field: "closeAt"
+                field: "prettyCloseAt"
+            },
+            {
+                headerName: "Edit",
+                field: '',
+                cellRendererFramework: EditCell,
+                cellRendererParams: {
+                    handleAssessmentChangeDate: this.props.handleAssessmentChangeDate
+                },
+                width: 150,
+                suppressSorting: true,
+                suppressMovable: true,
+                suppressMenu: true,
+                cellStyle: {
+                    padding: 0
+                },
+                // hide: !this.props.handleDeleteAssessment
             },
             {
                 headerName: "Max Grade",
@@ -139,8 +157,9 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
         if(!this.props.assessmentOverviews) {
             return [];
         }
-
-        return this.props.assessmentOverviews
+        
+        const overview = this.props.assessmentOverviews.slice();
+        return overview
             .sort((subX, subY) => {
                 if(subX.category < subY.category) {
                     return -1;
@@ -150,10 +169,11 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
                     return 1;
                 }
             })
-            .map((overview) => {
-                overview.closeAt = getPrettyDate(overview.closeAt);
-                overview.openAt = getPrettyDate(overview.openAt);
-                return overview;
+            .map((assessmentOverview) => {
+                const clone = JSON.parse(JSON.stringify(assessmentOverview));
+                clone.prettyCloseAt = getPrettyDate(clone.closeAt);
+                clone.prettyOpenAt = getPrettyDate(clone.openAt);
+                return clone;
             });
     }
 

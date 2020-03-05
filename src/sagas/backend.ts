@@ -66,6 +66,27 @@ function* backendSaga(): SagaIterator {
     yield call(showSuccessMessage, 'Deleted successfully!', 1000);
   });
 
+  yield takeEvery(actionTypes.CHANGE_DATE_ASSESSMENT, function*(
+    action: ReturnType<typeof actions.changeDateAssessment>
+  ) {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+    const id = action.payload.id;
+    const closeAt = action.payload.closeAt;
+    const openAt = action.payload.openAt;
+    const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens);
+
+    if(!resp || !resp.ok) {
+      yield request.handleResponseError(resp);
+      return;
+    }
+
+    yield put(actions.fetchAssessmentOverviews());
+    yield call(showSuccessMessage, 'Updated successfully!', 1000);
+  });
+
   yield takeEvery(actionTypes.PUBLISH_ASSESSMENT, function*(
     action: ReturnType<typeof actions.publishAssessment>
   ) {
