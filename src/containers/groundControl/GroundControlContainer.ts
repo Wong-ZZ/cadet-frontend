@@ -2,10 +2,11 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import {
+  changeDateAssessment ,
   deleteAssessment,
   fetchAssessmentOverviews,
   publishAssessment,
-  uploadAssessment  
+  uploadAssessment
 } from '../../actions/session';
 import GroundControl, { IDispatchProps, IStateProps } from '../../components/groundControl/GroundControl';
 import { IState } from '../../reducers/states';
@@ -23,7 +24,8 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleAssessmentOverviewFetch: fetchAssessmentOverviews,
       handleDeleteAssessment: deleteAssessment,
       handleUploadAssessment: uploadAssessment,
-      handlePublishAssessment: publishAssessment      
+      handlePublishAssessment: publishAssessment,
+      handleAssessmentChangeDate: changeDateAssessment
     },
     dispatch
   );

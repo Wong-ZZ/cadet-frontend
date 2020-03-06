@@ -103,6 +103,18 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
+export async function changeDateAssessment(id: number, closeAt: string, openAt: string, tokens: Tokens) {
+    const resp = await request(`assessments/update/${id}`, 'POST', {
+      accessToken: tokens.accessToken,
+      body: { closeAt, openAt },
+      noHeaderAccept: true,
+      refreshToken: tokens.refreshToken,
+      shouldAutoLogout: false,
+      shouldRefresh: true
+    });
+    return resp;
+}
+
 export async function publishAssessment(id: number, bool: boolean, tokens: Tokens) {
     const resp = await request(`assessments/publish/${id}`, 'POST', {
       accessToken: tokens.accessToken,
@@ -113,7 +125,7 @@ export async function publishAssessment(id: number, bool: boolean, tokens: Token
       shouldRefresh: true
     });
     return resp;
-  }
+}
 
 export async function deleteAssessment(id: number, tokens: Tokens) {
   const resp = await request(`assessments/${id}`, 'DELETE', {
