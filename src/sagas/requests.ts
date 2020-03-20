@@ -103,7 +103,13 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
-export async function changeDateAssessment(id: number, closeAt: string, openAt: string, tokens: Tokens) {
+export async function changeDateAssessment(
+  id: number, 
+  closeAt: string, 
+  openAt: string, 
+  tokens: Tokens, 
+  errorMessageWrapper: string[]
+  ) {
     const resp = await request(`assessments/update/${id}`, 'POST', {
       accessToken: tokens.accessToken,
       body: { closeAt, openAt },
@@ -112,6 +118,9 @@ export async function changeDateAssessment(id: number, closeAt: string, openAt: 
       shouldAutoLogout: false,
       shouldRefresh: true
     });
+    if(resp && !resp.ok) {
+        await resp.text().then(errmsg => errorMessageWrapper[0] = errmsg);
+    }
     return resp;
 }
 

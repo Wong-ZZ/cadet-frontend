@@ -76,10 +76,11 @@ function* backendSaga(): SagaIterator {
     const id = action.payload.id;
     const closeAt = action.payload.closeAt;
     const openAt = action.payload.openAt;
-    const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens);
+    const errorMessageWrapper: string[] = ["Something went wrong"];
+    const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens, errorMessageWrapper);
 
     if(!resp || !resp.ok) {
-      yield request.handleResponseError(resp);
+      yield call(showWarningMessage, errorMessageWrapper[0], 5000);
       return;
     }
 
