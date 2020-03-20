@@ -6,7 +6,8 @@ import {
   deleteAssessment,
   fetchAssessmentOverviews,
   publishAssessment,
-  uploadAssessment
+  uploadAssessment,
+  // fetchChapter
 } from '../../actions/session';
 import GroundControl, { IDispatchProps, IStateProps } from '../../components/groundControl/GroundControl';
 import { IState } from '../../reducers/states';
@@ -25,7 +26,8 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleDeleteAssessment: deleteAssessment,
       handleUploadAssessment: uploadAssessment,
       handlePublishAssessment: publishAssessment,
-      handleAssessmentChangeDate: changeDateAssessment
+      handleAssessmentChangeDate: changeDateAssessment,
+      handleChapterSelect: fetchAssessmentOverviews
     },
     dispatch
   );

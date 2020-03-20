@@ -47,6 +47,49 @@ function* backendSaga(): SagaIterator {
     yield history.push('/academy');
   });
 
+
+  
+  yield takeEvery(actionTypes.FETCH_CHAPTER, function*() {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+  
+    // const resp: Response = yield request.fetchChapter(tokens);
+
+    const chapterNo = yield call(request.fetchChapter, tokens);
+    if (chapterNo) {
+      yield put(actions.updateChapter(chapterNo));
+    }
+
+  });
+
+  yield takeEvery(actionTypes.FETCH_SOURCECAST_INDEX, function*(
+    action: ReturnType<typeof actions.fetchSourcecastIndex>
+  ) {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+    const sourcecastIndex = yield call(request.getSourcecastIndex, tokens);
+    if (sourcecastIndex) {
+      yield put(actions.updateSourcecastIndex(sourcecastIndex, action.payload.workspaceLocation));
+    }
+  });
+
+
+  yield takeEvery(actionTypes.FETCH_ASSESSMENT_OVERVIEWS, function*() {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+    const assessmentOverviews = yield call(request.getAssessmentOverviews, tokens);
+    if (assessmentOverviews) {
+      yield put(actions.updateAssessmentOverviews(assessmentOverviews));
+    }
+  });
+
+
   yield takeEvery(actionTypes.DELETE_ASSESSMENT, function*(
     action: ReturnType<typeof actions.deleteAssessment>
   ) {

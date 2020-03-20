@@ -523,6 +523,7 @@ export async function getSourcecastIndex(tokens: Tokens): Promise<ISourcecastDat
     shouldAutoLogout: false,
     shouldRefresh: true
   });
+  
   if (!resp || !resp.ok) {
     return null;
   }
@@ -648,6 +649,96 @@ export const postMaterialFolder = async (title: string, parentId: number, tokens
   return resp;
 };
 
+
+
+// chapter
+// export async function getUser(tokens: Tokens): Promise<object | null> {
+//   const resp = await request('user', 'GET', {
+//     accessToken: tokens.accessToken,
+//     refreshToken: tokens.refreshToken,
+//     shouldRefresh: true
+//   });
+//   if (!resp || !resp.ok) {
+//     return null;
+//   }
+//   return await resp.json();
+// }
+
+export async function fetchChapter(tokens: Tokens): Promise<number | null>{
+  
+  const resp = await request('chapter', 'GET', {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    noHeaderAccept: true,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  }).then(response => (response != null) ? response.json() : response);
+  
+  if (resp && resp.ok) {
+    console.log(resp.json().chapter);
+    return await resp.json();
+   
+  } else {
+    console.log("no resp");
+    return 3;
+  }
+}
+// export async function getAssessment(id: number, tokens: Tokens): Promise<IAssessment | null> {
+//   let resp = await request(`assessments/${id}`, 'POST', {
+//     accessToken: tokens.accessToken,
+//     refreshToken: tokens.refreshToken,
+//     shouldAutoLogout: false,
+//     shouldRefresh: true
+//   });
+
+
+// export const fetchChapter = async () => {
+  
+//   const resp = await request('chapter', 'GET', {
+//     noHeaderAccept: true,
+//     shouldAutoLogout: false,
+//     shouldRefresh: true
+//   });
+//   if (resp != null) {
+    
+//     return resp.json();
+//   } else {
+//     return 1;
+//   }
+// }
+
+// export const uploadAssessment = async (
+//   file: File,
+//   tokens: Tokens
+// ) => {
+//   const formData = new FormData();
+//   formData.append('assessment[file]', file);
+//   const resp = await request(`assessments`, 'POST', {
+//     accessToken: tokens.accessToken,
+//     body: formData,
+//     noContentType: true,
+//     noHeaderAccept: true,
+//     refreshToken: tokens.refreshToken,
+//     shouldAutoLogout: false,
+//     shouldRefresh: true
+//   });
+//   return resp;
+// };
+
+
+
+// export async function changeDateAssessment(id: number, closeAt: string, openAt: string, tokens: Tokens) {
+//   const resp = await request(`assessments/update/${id}`, 'POST', {
+//     accessToken: tokens.accessToken,
+//     body: { closeAt, openAt },
+//     noHeaderAccept: true,
+//     refreshToken: tokens.refreshToken,
+//     shouldAutoLogout: false,
+//     shouldRefresh: true
+//   });
+//   return resp;
+// }
+
 /**
  * @returns {(Response|null)} Response if successful, otherwise null.
  *
@@ -687,6 +778,7 @@ async function request(
     // response.ok is (200 <= response.status <= 299)
     // response.status of > 299 does not raise error; so deal with in in the try clause
     if (opts.shouldRefresh && resp && resp.status === 401) {
+      
       const newTokens = await postRefresh(opts.refreshToken!);
       store.dispatch(actions.setTokens(newTokens!));
       const newOpts = {
@@ -751,3 +843,5 @@ export function* handleResponseError(resp: Response | null, codes?: Map<number, 
 }
 
 const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
+

@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { ActionType } from 'typesafe-actions';
 
 import * as actions from '../actions';
-import { CHANGE_QUERY_STRING, TOGGLE_USING_SUBST } from '../actions/actionTypes';
+import { CHANGE_QUERY_STRING, TOGGLE_USING_SUBST, UPDATE_CHAPTER_NUMBER } from '../actions/actionTypes';
 import { defaultPlayground, IPlaygroundState } from './states';
 
 export const reducer: Reducer<IPlaygroundState> = (
@@ -20,6 +20,11 @@ export const reducer: Reducer<IPlaygroundState> = (
         ...state,
         usingSubst: action.payload
       };
+    case UPDATE_CHAPTER_NUMBER:
+        return {
+          ...state,
+          sourceChapter: action.payload
+        };
     default:
       return state;
   }

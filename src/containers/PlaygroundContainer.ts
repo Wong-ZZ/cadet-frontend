@@ -31,8 +31,10 @@ import {
   updateEditorValue,
   updateReplValue,
   WorkspaceLocation,
-  WorkspaceLocations
+  WorkspaceLocations,
+  fetchChapter
 } from '../actions';
+
 import { ExternalLibraryName } from '../components/assessment/assessmentShape';
 import Playground, { IDispatchProps, IStateProps } from '../components/Playground';
 import { IState, SideContentType } from '../reducers/states';
@@ -54,12 +56,14 @@ const mapStateToProps: MapStateToProps<IStateProps, {}, IState> = state => ({
   sharedbAceIsInviting: state.workspaces.playground.sharedbAceIsInviting,
   sharedbAceInitValue: state.workspaces.playground.sharedbAceInitValue,
   sideContentHeight: state.workspaces.playground.sideContentHeight,
-  sourceChapter: state.workspaces.playground.context.chapter,
+  // sourceChapter: state.workspaces.playground.context.chapter,
+  // sourceChapter: (Number) (fetchChapter().valueOf()),
+  sourceChapter: state.playground.sourceChapter,
   websocketStatus: state.workspaces.playground.websocketStatus,
   externalLibraryName: state.workspaces.playground.externalLibrary,
   usingSubst: state.playground.usingSubst
 });
-
+// console.log((fetchChapter()));
 const workspaceLocation: WorkspaceLocation = WorkspaceLocations.playground;
 
 const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Dispatch<any>) =>
@@ -99,7 +103,9 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleUsingSubst: (usingSubst: boolean) => toggleUsingSubst(usingSubst),
       handleDebuggerPause: () => beginDebuggerPause(workspaceLocation),
       handleDebuggerResume: () => debuggerResume(workspaceLocation),
-      handleDebuggerReset: () => debuggerReset(workspaceLocation)
+      handleDebuggerReset: () => debuggerReset(workspaceLocation),
+      handleFetchChapter: () => fetchChapter(),
+      
     },
     dispatch
   );

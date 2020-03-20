@@ -12,16 +12,23 @@ import Dropzone from './Dropzone';
 import EditCell from './EditCell';
 import PublishCell from './PublishCell';
 
+import {
+    ChapterSelect,
+  } from '../workspace/controlBar/index';
+
+
 export interface IDispatchProps {
     handleAssessmentOverviewFetch: () => void;
     handleDeleteAssessment: (id: number) => void;
     handleUploadAssessment: (file: File) => void;
     handlePublishAssessment: (bool: boolean, id: number) => void;
     handleAssessmentChangeDate: (id:number, openAt: string, closeAt: string) => void;
+    handleChapterSelect: (chapter: number) => void;
 }
 
 export interface IStateProps {
     assessmentOverviews: IAssessmentOverview[];
+    sourceChapter?: number;
 }
 
 export interface IGroundControlProps extends IDispatchProps, IStateProps {}
@@ -109,6 +116,8 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
             ];
     }
 
+    
+
     public componentDidUpdate(prevProps: IGroundControlProps) {
         if (this.gridApi && this.props.assessmentOverviews.length !== prevProps.assessmentOverviews.length) {
             this.gridApi.setRowData(this.sortByCategory());            
@@ -116,6 +125,30 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
     }
 
     public render() {
+        
+        const chapterSelectHandler = ({ chapter }: { chapter: number }, e: any) => {
+            // console.log(chapter);
+            // console.log(this.props.sourceChapter);
+            // if (
+            //   (chapter <= 2 && this.state.hasBreakpoints) ||
+            //   this.state.selectedTab === SideContentType.substVisualizer
+            // ) {
+            //   this.props.handleUsingSubst(true);
+            // }
+            // if (chapter > 2) {
+            //   this.props.handleReplOutputClear();
+            //   this.props.handleUsingSubst(false);
+            // }
+            this.props.handleChapterSelect(chapter);
+          };
+          const chapterSelect = (
+            <ChapterSelect
+              handleChapterSelect={chapterSelectHandler}
+              sourceChapter={this.props.sourceChapter == undefined ? 1 : this.props.sourceChapter}
+              key="chapter"
+            />
+          );
+
         const data = this.sortByCategory();
         const Grid = () => (
             <div className="GradingContainer">
@@ -140,6 +173,7 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
         );
 
         const display = (
+            
             <div>
                 <Dropzone handleUploadAssessment={this.props.handleUploadAssessment}/>
                 <Grid/>
@@ -148,6 +182,7 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
 
         return (
             <div>
+                <div> {chapterSelect} </div>
                 <ContentDisplay display={display} loadContentDispatch={this.props.handleAssessmentOverviewFetch}/>
             </div>
         );
