@@ -20,8 +20,13 @@ export interface IDispatchProps {
     handleAssessmentChangeDate: (id:number, openAt: string, closeAt: string) => void;
 }
 
+export interface IGroundControlAssessmentOverview extends IAssessmentOverview{
+    prettyOpenAt?: string;
+    prettyCloseAt?: string;
+}
+
 export interface IStateProps {
-    assessmentOverviews: IAssessmentOverview[];
+    assessmentOverviews: IGroundControlAssessmentOverview[];
 }
 
 export interface IGroundControlProps extends IDispatchProps, IStateProps {}
@@ -44,18 +49,11 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
             },
             {
                 headerName: "Open Date",
-                field: "prettyOpenAt"
-            },
-            {
-                headerName: "Close Date",
-                field: "prettyCloseAt"
-            },
-            {
-                headerName: "Edit",
-                field: '',
+                field: "",
                 cellRendererFramework: EditCell,
                 cellRendererParams: {
-                    handleAssessmentChangeDate: this.props.handleAssessmentChangeDate
+                    handleAssessmentChangeDate: this.props.handleAssessmentChangeDate,
+                    forOpenDate: true
                 },
                 width: 150,
                 suppressSorting: true,
@@ -64,7 +62,22 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
                 cellStyle: {
                     padding: 0
                 },
-                // hide: !this.props.handleDeleteAssessment
+            },
+            {
+                headerName: "Close Date",
+                field: "",
+                cellRendererFramework: EditCell,
+                cellRendererParams: {
+                    handleAssessmentChangeDate: this.props.handleAssessmentChangeDate,
+                    forOpenDate: false
+                },
+                width: 150,
+                suppressSorting: true,
+                suppressMovable: true,
+                suppressMenu: true,
+                cellStyle: {
+                    padding: 0
+                },
             },
             {
                 headerName: "Max Grade",
