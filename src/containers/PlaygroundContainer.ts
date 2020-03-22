@@ -32,7 +32,8 @@ import {
   updateReplValue,
   WorkspaceLocation,
   WorkspaceLocations,
-  fetchChapter
+  fetchChapter,
+  // updateChapter
 } from '../actions';
 
 import { ExternalLibraryName } from '../components/assessment/assessmentShape';
@@ -105,6 +106,7 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleDebuggerResume: () => debuggerResume(workspaceLocation),
       handleDebuggerReset: () => debuggerReset(workspaceLocation),
       handleFetchChapter: () => fetchChapter(),
+      // handleUpdateChapter: (chapterno: number) => updateChapter(chapterno)
       
     },
     dispatch

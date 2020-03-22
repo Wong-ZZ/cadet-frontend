@@ -672,17 +672,29 @@ export async function fetchChapter(tokens: Tokens): Promise<number | null>{
     noHeaderAccept: true,
     shouldAutoLogout: false,
     shouldRefresh: true
-  }).then(response => (response != null) ? response.json() : response);
+  })
+
   
-  if (resp && resp.ok) {
-    console.log(resp.json().chapter);
-    return await resp.json();
-   
-  } else {
-    console.log("no resp");
-    return 3;
+  if (!resp || !resp.ok) {
+    return null;
   }
+  
+  return (await resp.json());
 }
+
+  // if (resp != null) {
+  //   resp.then(response => response.json());
+  // }
+
+  // if (resp && resp.ok) {
+  //   console.log(resp);
+  //   return await resp.json();
+   
+  // } else {
+  //   console.log("no resp");
+  //   return 3;
+  // }
+
 // export async function getAssessment(id: number, tokens: Tokens): Promise<IAssessment | null> {
 //   let resp = await request(`assessments/${id}`, 'POST', {
 //     accessToken: tokens.accessToken,

@@ -27,6 +27,7 @@ import Inspector from './workspace/side-content/Inspector';
 import ListVisualizer from './workspace/side-content/ListVisualizer';
 import SubstVisualizer from './workspace/side-content/SubstVisualizer';
 import VideoDisplay from './workspace/side-content/VideoDisplay';
+// import { updateChapter } from 'src/actions';
 
 const CHAP = '\xa7';
 
@@ -102,17 +103,21 @@ export interface IDispatchProps {
   handleDebuggerReset: () => void;
   handleToggleEditorAutorun: () => void;
   handleFetchChapter: () => void;
+  // handleUpdateChapter: (chapterno: number) => updateChapter(chapterno);
 }
 
 type PlaygroundState = {
   isGreen: boolean;
   selectedTab: SideContentType;
   hasBreakpoints: boolean;
+  currChapter: number;
+  update: boolean;
 };
 
 class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
   private keyMap = { goGreen: 'h u l k' };
   private handlers = { goGreen: () => {} };
+  
 
   constructor(props: IPlaygroundProps) {
     super(props);
@@ -120,10 +125,38 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       isGreen: false,
       selectedTab: SideContentType.introduction,
       hasBreakpoints: false,
+      currChapter: this.props.sourceChapter,
+      update: true
     };
     this.handlers.goGreen = this.toggleIsGreen.bind(this);
+    this.updateChap = this.updateChap.bind(this);
     (window as any).thePlayground = this;
     this.props.handleFetchChapter();
+    
+  }
+ 
+
+  public componentDidUpdate(prevProps: IPlaygroundProps) {
+    
+    if(this.state.update && this.state.currChapter !== this.props.sourceChapter) {
+     this.setState({
+      ...this.state,
+       currChapter: this.props.sourceChapter
+     });
+    }
+    
+   
+  }
+
+  updateChap = (chapter: number) => {
+    
+      this.setState({
+        ...this.state,
+        currChapter: chapter,
+        update: false
+      });
+   
+    // console.log(chapter);
   }
 
   public render() {
@@ -150,6 +183,9 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
     );
 
     const chapterSelectHandler = ({ chapter }: { chapter: number }, e: any) => {
+        this.updateChap.bind(this);
+        this.updateChap(chapter);
+        
       if (
         (chapter <= 2 && this.state.hasBreakpoints) ||
         this.state.selectedTab === SideContentType.substVisualizer
@@ -162,10 +198,12 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       }
       this.props.handleChapterSelect(chapter);
     };
+    
+  
     const chapterSelect = (
       <ChapterSelect
         handleChapterSelect={chapterSelectHandler}
-        sourceChapter={this.props.sourceChapter}
+        sourceChapter={this.state.currChapter}
         key="chapter"
       />
     );

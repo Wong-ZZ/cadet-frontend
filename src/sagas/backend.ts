@@ -58,8 +58,10 @@ function* backendSaga(): SagaIterator {
     // const resp: Response = yield request.fetchChapter(tokens);
 
     const chapterNo = yield call(request.fetchChapter, tokens);
-    if (chapterNo) {
-      yield put(actions.updateChapter(chapterNo));
+    const chap = chapterNo.chapter.chapterno;
+
+    if (chap) {
+      yield put(actions.updateChapter(chap));
     }
 
   });

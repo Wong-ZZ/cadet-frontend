@@ -16,5 +16,7 @@ export const fetchChapter = () => action(actionTypes.FETCH_CHAPTER);
     chapterno: number,
     // index: ISourcecastData[],
     // workspaceLocation: WorkspaceLocation
-  ) =>
+  ) => 
     action(actionTypes.UPDATE_CHAPTER_NUMBER, chapterno);
+  
+  
