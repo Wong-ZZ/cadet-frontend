@@ -47,6 +47,19 @@ function* backendSaga(): SagaIterator {
     yield history.push('/academy');
   });
 
+  yield takeEvery(actionTypes.FETCH_GROUP_AVENGERS, function*(
+    action: ReturnType<typeof actions.fetchGroupAvengers>
+  ) {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
+
+    const resp: Response = yield request.getGroupAvengers(tokens);
+
+    yield put(actions.updateGroupAvengers(resp));
+  });
+
   yield takeEvery(actionTypes.DELETE_ASSESSMENT, function*(
     action: ReturnType<typeof actions.deleteAssessment>
   ) {
@@ -57,7 +70,7 @@ function* backendSaga(): SagaIterator {
     const id = action.payload;
     const resp: Response = yield request.deleteAssessment(id, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
@@ -76,10 +89,16 @@ function* backendSaga(): SagaIterator {
     const id = action.payload.id;
     const closeAt = action.payload.closeAt;
     const openAt = action.payload.openAt;
-    const errorMessageWrapper: string[] = ["Something went wrong"];
-    const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens, errorMessageWrapper);
+    const errorMessageWrapper: string[] = ['Something went wrong'];
+    const resp: Response = yield request.changeDateAssessment(
+      id,
+      closeAt,
+      openAt,
+      tokens,
+      errorMessageWrapper
+    );
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield call(showWarningMessage, errorMessageWrapper[0], 5000);
       return;
     }
@@ -99,18 +118,18 @@ function* backendSaga(): SagaIterator {
     const bool = action.payload.bool;
     const resp: Response = yield request.publishAssessment(id, bool, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
 
     yield put(actions.fetchAssessmentOverviews());
 
-    if(bool) {
+    if (bool) {
       yield call(showSuccessMessage, 'Published successfully!', 1000);
     } else {
       yield call(showSuccessMessage, 'Unpublished successfully!', 1000);
-    }    
+    }
   });
 
   yield takeEvery(actionTypes.UPLOAD_ASSESSMENT, function*(
@@ -121,9 +140,9 @@ function* backendSaga(): SagaIterator {
       refreshToken: state.session.refreshToken
     }));
     const file = action.payload;
-    const errorMessageWrapper = ["Something went wrong and I am not sure why"];
+    const errorMessageWrapper = ['Something went wrong and I am not sure why'];
     const resp: Response = yield request.uploadAssessment(file, tokens, errorMessageWrapper);
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield call(showWarningMessage, errorMessageWrapper[0], 10000);
       return;
     }

@@ -32,6 +32,7 @@ export interface IState {
   readonly playground: IPlaygroundState;
   readonly session: ISessionState;
   readonly workspaces: IWorkspaceManagerState;
+  readonly dashboard: IDashBoardState;
 }
 
 export interface IAcademyState {
@@ -140,6 +141,10 @@ export interface ISessionState {
   readonly name?: string;
   readonly xp: number;
   readonly notifications: Notification[];
+}
+
+export interface IDashBoardState {
+  readonly groupAvengers: object;
 }
 
 type ReplHistory = {
@@ -388,10 +393,15 @@ export const defaultSession: ISessionState = {
   notifications: []
 };
 
+export const defaultDashBoard: IDashBoardState = {
+  groupAvengers: {}
+};
+
 export const defaultState: IState = {
   academy: defaultAcademy,
   application: defaultApplication,
   playground: defaultPlayground,
   session: defaultSession,
-  workspaces: defaultWorkspaceManager
+  workspaces: defaultWorkspaceManager,
+  dashboard: defaultDashBoard
 };

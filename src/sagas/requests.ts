@@ -103,37 +103,49 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
+export async function getGroupAvengers(tokens: Tokens): Promise<object | null> {
+  const resp = await request('user/groups', 'POST', {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    shouldRefresh: true
+  });
+  if (!resp || !resp.ok) {
+    return null;
+  }
+  return await resp.json();
+}
+
 export async function changeDateAssessment(
-  id: number, 
-  closeAt: string, 
-  openAt: string, 
-  tokens: Tokens, 
+  id: number,
+  closeAt: string,
+  openAt: string,
+  tokens: Tokens,
   errorMessageWrapper: string[]
-  ) {
-    const resp = await request(`assessments/update/${id}`, 'POST', {
-      accessToken: tokens.accessToken,
-      body: { closeAt, openAt },
-      noHeaderAccept: true,
-      refreshToken: tokens.refreshToken,
-      shouldAutoLogout: false,
-      shouldRefresh: true
-    });
-    if(resp && !resp.ok) {
-        await resp.text().then(errmsg => errorMessageWrapper[0] = errmsg);
-    }
-    return resp;
+) {
+  const resp = await request(`assessments/update/${id}`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: { closeAt, openAt },
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  if (resp && !resp.ok) {
+    await resp.text().then(errmsg => (errorMessageWrapper[0] = errmsg));
+  }
+  return resp;
 }
 
 export async function publishAssessment(id: number, bool: boolean, tokens: Tokens) {
-    const resp = await request(`assessments/publish/${id}`, 'POST', {
-      accessToken: tokens.accessToken,
-      body: { bool },
-      noHeaderAccept: true,
-      refreshToken: tokens.refreshToken,
-      shouldAutoLogout: false,
-      shouldRefresh: true
-    });
-    return resp;
+  const resp = await request(`assessments/publish/${id}`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: { bool },
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
 }
 
 export async function deleteAssessment(id: number, tokens: Tokens) {
@@ -163,8 +175,8 @@ export const uploadAssessment = async (
     shouldAutoLogout: false,
     shouldRefresh: true
   });
-  if(resp && !resp.ok) {
-    await resp.text().then(errmsg => errorMessageWrapper[0] = errmsg);
+  if (resp && !resp.ok) {
+    await resp.text().then(errmsg => (errorMessageWrapper[0] = errmsg));
   }
   return resp;
 };
@@ -685,7 +697,7 @@ async function request(
   if (opts.accessToken) {
     headers.append('Authorization', `Bearer ${opts.accessToken}`);
   }
-  const fetchOpts: any = { method, headers};
+  const fetchOpts: any = { method, headers };
   if (opts.body) {
     if (opts.noContentType) {
       // Content Type is not needed for sending multipart data
