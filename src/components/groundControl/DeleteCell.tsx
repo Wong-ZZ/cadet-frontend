@@ -15,8 +15,6 @@ interface IDeleteCellState {
 }
 
 class DeleteCell extends React.Component<IDeleteCellProps, IDeleteCellState> {
-  
-
   public constructor(props: IDeleteCellProps) {
     super(props);
     this.state = {
@@ -36,9 +34,7 @@ class DeleteCell extends React.Component<IDeleteCellProps, IDeleteCellState> {
           canOutsideClickClose={true}
         >
           <div className={Classes.DIALOG_BODY}>
-            {(
-              <p>Are you sure to delete this Assessment?</p>
-            )}
+            {<p>Are you sure to delete this Assessment?</p>}
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -58,8 +54,6 @@ class DeleteCell extends React.Component<IDeleteCellProps, IDeleteCellState> {
     this.props.handleDeleteAssessment(data.id);
     this.handleCloseDialog();
   };
-  
-  
 }
 
 export default DeleteCell;

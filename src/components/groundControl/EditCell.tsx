@@ -8,12 +8,12 @@ import { IGroundControlAssessmentOverview } from './GroundControl';
 
 interface IEditCellProps {
   data: IGroundControlAssessmentOverview;
-  handleAssessmentChangeDate: (id:number, openAt: string, closeAt: string) => void;
+  handleAssessmentChangeDate: (id: number, openAt: string, closeAt: string) => void;
   forOpenDate: boolean;
 }
 
 interface IEditCellState extends IEditCellDateState {
-  dialogOpen: boolean;  
+  dialogOpen: boolean;
 }
 
 interface IEditCellDateState {
@@ -22,7 +22,7 @@ interface IEditCellDateState {
 }
 
 interface IDateInputProps {
-    dateInputKey: keyof IEditCellDateState;
+  dateInputKey: keyof IEditCellDateState;
 }
 
 class EditCell extends React.Component<IEditCellProps, IEditCellState> {
@@ -38,8 +38,8 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
   }
 
   public render() {
-      const fieldName = this.props.forOpenDate ? "Opening": "Closing";
-      const dateInputKey = this.props.forOpenDate ? "openAt" : "closeAt";
+    const fieldName = this.props.forOpenDate ? 'Opening' : 'Closing';
+    const dateInputKey = this.props.forOpenDate ? 'openAt' : 'closeAt';
     return (
       <div>
         {this.props.forOpenDate ? this.props.data.prettyOpenAt : this.props.data.prettyCloseAt}
@@ -52,7 +52,7 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
           canOutsideClickClose={true}
         >
           <div className={Classes.DIALOG_BODY}>
-            {fieldName} Date: {<this.dateInput dateInputKey={dateInputKey}/>}
+            {fieldName} Date: {<this.dateInput dateInputKey={dateInputKey} />}
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -65,37 +65,42 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
     );
   }
 
-  
-
   private dateInput = (props: IDateInputProps) => {
-    return (<DateInput
+    return (
+      <DateInput
         formatDate={this.formatDate}
         onChange={this.handleDateChange(props.dateInputKey)}
         parseDate={this.parseDate}
-        value={props.dateInputKey === "closeAt" ? this.state.closeAt : this.state.openAt}
-        timePrecision={"minute"}
+        value={props.dateInputKey === 'closeAt' ? this.state.closeAt : this.state.openAt}
+        timePrecision={'minute'}
         fill={true}
         maxDate={this.maxDate}
-    />);
-  }
+      />
+    );
+  };
 
   private parseDate = (str: string) => new Date(str);
 
   private formatDate = (date: Date) => date.toLocaleString();
 
   private handleDateChange = (key: keyof IEditCellState) => (selectedDate: Date) => {
-    this.setState({[key]: selectedDate} as unknown as Pick<IEditCellState, keyof IEditCellState>);
-  }
+    this.setState(({ [key]: selectedDate } as unknown) as Pick<
+      IEditCellState,
+      keyof IEditCellState
+    >);
+  };
 
   private handleCloseDialog = () => this.setState({ dialogOpen: false });
   private handleOpenDialog = () => this.setState({ dialogOpen: true });
   private handleUpdate = () => {
     const { data } = this.props;
-    this.props.handleAssessmentChangeDate(data.id, this.state.openAt.toISOString(), this.state.closeAt.toISOString());
+    this.props.handleAssessmentChangeDate(
+      data.id,
+      this.state.openAt.toISOString(),
+      this.state.closeAt.toISOString()
+    );
     this.handleCloseDialog();
   };
-  
-  
 }
 
 export default EditCell;
