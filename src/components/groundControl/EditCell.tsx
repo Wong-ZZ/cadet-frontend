@@ -8,11 +8,11 @@ import { controlButton } from '../commons';
 
 interface IEditCellProps {
   data: IAssessmentOverview;
-  handleAssessmentChangeDate: (id:number, openAt: string, closeAt: string) => void;
+  handleAssessmentChangeDate: (id: number, openAt: string, closeAt: string) => void;
 }
 
 interface IEditCellState extends IEditCellDateState {
-  dialogOpen: boolean;  
+  dialogOpen: boolean;
 }
 
 interface IEditCellDateState {
@@ -21,7 +21,7 @@ interface IEditCellDateState {
 }
 
 interface IDateInputProps {
-    dateInputKey: keyof IEditCellDateState;
+  dateInputKey: keyof IEditCellDateState;
 }
 
 class EditCell extends React.Component<IEditCellProps, IEditCellState> {
@@ -48,9 +48,9 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
           canOutsideClickClose={true}
         >
           <div className={Classes.DIALOG_BODY}>
-            Opening Date: {<this.dateInput dateInputKey="openAt"/>}
-            <br/>
-            Closing Date: {<this.dateInput dateInputKey="closeAt"/>}
+            Opening Date: {<this.dateInput dateInputKey="openAt" />}
+            <br />
+            Closing Date: {<this.dateInput dateInputKey="closeAt" />}
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -63,37 +63,42 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
     );
   }
 
-  
-
   private dateInput = (props: IDateInputProps) => {
-    return (<DateInput
+    return (
+      <DateInput
         formatDate={this.formatDate}
         onChange={this.handleDateChange(props.dateInputKey)}
         parseDate={this.parseDate}
-        value={props.dateInputKey === "closeAt" ? this.state.closeAt : this.state.openAt}
-        timePrecision={"minute"}
+        value={props.dateInputKey === 'closeAt' ? this.state.closeAt : this.state.openAt}
+        timePrecision={'minute'}
         fill={true}
         maxDate={this.maxDate}
-    />);
-  }
+      />
+    );
+  };
 
   private parseDate = (str: string) => new Date(str);
 
   private formatDate = (date: Date) => date.toLocaleString();
 
   private handleDateChange = (key: keyof IEditCellState) => (selectedDate: Date) => {
-    this.setState({[key]: selectedDate} as unknown as Pick<IEditCellState, keyof IEditCellState>);
-  }
+    this.setState(({ [key]: selectedDate } as unknown) as Pick<
+      IEditCellState,
+      keyof IEditCellState
+    >);
+  };
 
   private handleCloseDialog = () => this.setState({ dialogOpen: false });
   private handleOpenDialog = () => this.setState({ dialogOpen: true });
   private handleUpdate = () => {
     const { data } = this.props;
-    this.props.handleAssessmentChangeDate(data.id, this.state.openAt.toISOString(), this.state.closeAt.toISOString());
+    this.props.handleAssessmentChangeDate(
+      data.id,
+      this.state.openAt.toISOString(),
+      this.state.closeAt.toISOString()
+    );
     this.handleCloseDialog();
   };
-  
-  
 }
 
 export default EditCell;

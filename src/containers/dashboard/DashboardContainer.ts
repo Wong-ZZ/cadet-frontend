@@ -7,7 +7,7 @@ import Dashboard from '../../components/dashboard/Dashboard';
 import { IState } from '../../reducers/states';
 
 const mapStateToProps: MapStateToProps<IStateProps, {}, IState> = state => ({
-  gradingOverviews: state.session.gradingOverviews ? state.session.gradingOverviews : [],
+  gradingOverviews: state.session.gradingOverviews ? state.session.gradingOverviews : []
 });
 
 const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Dispatch<any>) =>

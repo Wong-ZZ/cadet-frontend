@@ -201,11 +201,12 @@ export const updateHasUnsavedChanges = (
     hasUnsavedChanges
   });
 
+export const fetchChapter = () => action(actionTypes.FETCH_CHAPTER);
 
-  export const fetchChapter = () => action(actionTypes.FETCH_CHAPTER);
+// update database
+export const changeDefaultChapter = (chapterno: number) =>
+  action(actionTypes.CHANGE_DEFAULT_CHAPTER, { chapterno });
 
-  // update database
-  export const changeDefaultChapter = (chapterno: number) => action(actionTypes.CHANGE_DEFAULT_CHAPTER, { chapterno });
-
-  // update state
-  export const updateChapter = (chapterno: number) => action(actionTypes.UPDATE_CHAPTER_NUMBER, chapterno);
+// update state
+export const updateChapter = (chapterno: number) =>
+  action(actionTypes.UPDATE_CHAPTER_NUMBER, chapterno);

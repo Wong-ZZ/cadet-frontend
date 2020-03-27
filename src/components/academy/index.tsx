@@ -78,7 +78,7 @@ class Academy extends React.Component<IAcademyProps> {
             )}/${assessmentRegExp}`}
             render={assessmentRenderFactory(AssessmentCategories.Practical)}
           />
-          
+
           <Route path="/academy/groundcontrol" component={GroundControl} />
           <Route path="/academy/dashboard" component={Dashboard} />
           <Route path={`/academy/grading/${gradingRegExp}`} component={Grading} />

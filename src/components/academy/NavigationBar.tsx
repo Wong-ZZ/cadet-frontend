@@ -81,14 +81,22 @@ const NavigationBar: React.SFC<OwnProps> = props => (
         <div className="navbar-button-text hidden-xs">Practical</div>
       </NavLink>
 
-      {/* <DefaultChapter></DefaultChapter> */}
-
+      
     </NavbarGroup>
     {props.role === Role.Admin || props.role === Role.Staff ? (
-
-     
-     
       <NavbarGroup align={Alignment.RIGHT}>
+
+         <DefaultChapter></DefaultChapter>
+
+         <NavLink
+          to={'/academy/groundcontrol'}
+          activeClassName={Classes.ACTIVE}
+          className={classNames('NavigationBar__link', Classes.BUTTON, Classes.MINIMAL)}
+        >
+          <Icon icon="satellite" />
+          <div className="navbar-button-text hidden-xs">Ground Control</div>
+        </NavLink>
+
         <NavLink
           to={'/academy/sourcereel'}
           activeClassName={Classes.ACTIVE}
@@ -119,22 +127,12 @@ const NavigationBar: React.SFC<OwnProps> = props => (
             disableHover={true}
           />
         </NavLink>
-
-        
-
-        
       </NavbarGroup>
-      
-     
     ) : null}
-  
   </Navbar>
 );
 
 export default NavigationBar;
-
-
-
 
 // import { Alignment, Classes, Icon, Navbar, NavbarGroup } from '@blueprintjs/core';
 // import { IconNames } from '@blueprintjs/icons';
@@ -221,7 +219,7 @@ export default NavigationBar;
 //     </NavbarGroup>
 //     {props.role === Role.Admin || props.role === Role.Staff ? (
 //       <NavbarGroup align={Alignment.RIGHT}>
-        
+
 //         <NavLink
 //           to={'/academy/groundcontrol'}
 //           activeClassName={Classes.ACTIVE}
@@ -276,7 +274,7 @@ export default NavigationBar;
 
 //       </NavbarGroup>
 //     ) : null}
-    
+
 //   </Navbar>
 // );
 

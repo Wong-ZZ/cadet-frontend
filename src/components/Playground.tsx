@@ -113,19 +113,17 @@ type PlaygroundState = {
 class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
   private keyMap = { goGreen: 'h u l k' };
   private handlers = { goGreen: () => {} };
-  
 
   constructor(props: IPlaygroundProps) {
     super(props);
     this.state = {
       isGreen: false,
       selectedTab: SideContentType.introduction,
-      hasBreakpoints: false,
+      hasBreakpoints: false
     };
     this.handlers.goGreen = this.toggleIsGreen.bind(this);
     (window as any).thePlayground = this;
     this.props.handleFetchChapter();
-    
   }
 
   public render() {
@@ -164,8 +162,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       }
       this.props.handleChapterSelect(chapter);
     };
-    
-  
+
     const chapterSelect = (
       <ChapterSelect
         handleChapterSelect={chapterSelectHandler}
@@ -242,7 +239,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       // Enable Face API Display only when 'MACHINELEARNING' is selected
       tabs.push(FaceapiDisplayTab);
     }
-    
+
     if (this.props.sourceChapter >= 2) {
       // Enable Data Visualizer for Source Chapter 2 and above
       tabs.push(listVisualizerTab);

@@ -18,6 +18,7 @@ import {
   evalEditor,
   evalRepl,
   externalLibrarySelect,
+  fetchChapter,
   finishInvite,
   generateLzString,
   initInvite,
@@ -31,8 +32,7 @@ import {
   updateEditorValue,
   updateReplValue,
   WorkspaceLocation,
-  WorkspaceLocations,
-  fetchChapter
+  WorkspaceLocations
 } from '../actions';
 
 import { ExternalLibraryName } from '../components/assessment/assessmentShape';
@@ -102,7 +102,7 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleDebuggerPause: () => beginDebuggerPause(workspaceLocation),
       handleDebuggerResume: () => debuggerResume(workspaceLocation),
       handleDebuggerReset: () => debuggerReset(workspaceLocation),
-      handleFetchChapter: () => fetchChapter(),
+      handleFetchChapter: () => fetchChapter()
     },
     dispatch
   );

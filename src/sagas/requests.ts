@@ -103,28 +103,33 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
-export async function changeDateAssessment(id: number, closeAt: string, openAt: string, tokens: Tokens) {
-    const resp = await request(`assessments/update/${id}`, 'POST', {
-      accessToken: tokens.accessToken,
-      body: { closeAt, openAt },
-      noHeaderAccept: true,
-      refreshToken: tokens.refreshToken,
-      shouldAutoLogout: false,
-      shouldRefresh: true
-    });
-    return resp;
+export async function changeDateAssessment(
+  id: number,
+  closeAt: string,
+  openAt: string,
+  tokens: Tokens
+) {
+  const resp = await request(`assessments/update/${id}`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: { closeAt, openAt },
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
 }
 
 export async function publishAssessment(id: number, bool: boolean, tokens: Tokens) {
-    const resp = await request(`assessments/publish/${id}`, 'POST', {
-      accessToken: tokens.accessToken,
-      body: { bool },
-      noHeaderAccept: true,
-      refreshToken: tokens.refreshToken,
-      shouldAutoLogout: false,
-      shouldRefresh: true
-    });
-    return resp;
+  const resp = await request(`assessments/publish/${id}`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: { bool },
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
 }
 
 export async function deleteAssessment(id: number, tokens: Tokens) {
@@ -138,10 +143,7 @@ export async function deleteAssessment(id: number, tokens: Tokens) {
   return resp;
 }
 
-export const uploadAssessment = async (
-  file: File,
-  tokens: Tokens
-) => {
+export const uploadAssessment = async (file: File, tokens: Tokens) => {
   const formData = new FormData();
   formData.append('assessment[file]', file);
   const resp = await request(`assessments`, 'POST', {
@@ -523,7 +525,7 @@ export async function getSourcecastIndex(tokens: Tokens): Promise<ISourcecastDat
     shouldAutoLogout: false,
     shouldRefresh: true
   });
-  
+
   if (!resp || !resp.ok) {
     return null;
   }
@@ -652,21 +654,20 @@ export const postMaterialFolder = async (title: string, parentId: number, tokens
 /**
  * GET /chapter
  */
-export async function fetchChapter(tokens: Tokens): Promise<number | null>{
-  
+export async function fetchChapter(tokens: Tokens): Promise<number | null> {
   const resp = await request('chapter', 'GET', {
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
     noHeaderAccept: true,
     shouldAutoLogout: false,
     shouldRefresh: true
-  })
-  
+  });
+
   if (!resp || !resp.ok) {
     return null;
   }
-  
-  return (await resp.json());
+
+  return await resp.json();
 }
 
 /**
@@ -683,8 +684,6 @@ export async function changeDefaultChapter(chapterno: number, tokens: Tokens) {
   });
   return resp;
 }
-
-
 
 /**
  * @returns {(Response|null)} Response if successful, otherwise null.
@@ -710,7 +709,7 @@ async function request(
   if (opts.accessToken) {
     headers.append('Authorization', `Bearer ${opts.accessToken}`);
   }
-  const fetchOpts: any = { method, headers};
+  const fetchOpts: any = { method, headers };
   if (opts.body) {
     if (opts.noContentType) {
       // Content Type is not needed for sending multipart data
@@ -725,7 +724,6 @@ async function request(
     // response.ok is (200 <= response.status <= 299)
     // response.status of > 299 does not raise error; so deal with in in the try clause
     if (opts.shouldRefresh && resp && resp.status === 401) {
-      
       const newTokens = await postRefresh(opts.refreshToken!);
       store.dispatch(actions.setTokens(newTokens!));
       const newOpts = {
@@ -790,5 +788,3 @@ export function* handleResponseError(resp: Response | null, codes?: Map<number, 
 }
 
 const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
-
-

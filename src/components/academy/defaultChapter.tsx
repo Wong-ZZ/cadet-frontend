@@ -1,6 +1,7 @@
 import { Button, Classes, MenuItem } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { ItemRenderer, Select } from '@blueprintjs/select';
+import { ItemRenderer , Select} from '@blueprintjs/select';
+// 
 import * as React from 'react';
 
 import { RouteComponentProps } from 'react-router';
@@ -10,8 +11,9 @@ import { sourceChapters } from '../../reducers/states';
 export interface IChapterProps extends IDispatchProps, IStateProps, RouteComponentProps<{}> {}
 
 export type IDispatchProps = {
-    handleFetchChapter: () => void;
-    handleUpdateChapter: (chapterno: number) => void;
+  handleFetchChapter: () => void;
+  handleUpdateChapter: (chapter: IChapter) => void;
+  handleChapterSelect?: (i: IChapter, e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
 export interface IStateProps {
@@ -19,57 +21,71 @@ export interface IStateProps {
 }
 
 export interface IChapter {
-    chapter: number;
-    displayName: string;
+  chapter: number;
+  displayName: string;
 }
 
-class DefaultChapter extends React.Component<IChapterProps, {}> {
-    public constructor(props: IChapterProps) {
-        super(props);
-        this.props.handleFetchChapter();
-    }
-    
-    private styliseChapter = (chap: number) => `Source \xa7${chap}`;
+// class DefaultChapter extends React.Component<IChapterProps, {}> {
+export function DefaultChapter(props: IChapterProps) {
+  props.handleFetchChapter();
+  const styliseChapter = (chap: number) => `Source \xa7${chap}`;
+  const chapters = sourceChapters.map(chap => ({
+    displayName: styliseChapter(chap),
+    chapter: chap
+  }));
 
-    chapters = sourceChapters.map(chap => ({
-        displayName: this.styliseChapter(chap),
-        chapter: chap
-    }));
+  const chapterRenderer: ItemRenderer<IChapter> = (chap, { handleClick }) => (
+    <MenuItem
+      active={false}
+      key={chap.chapter}
+      // onClick={() => props.handleUpdateChapter(chap.chapter)}
+      onClick={handleClick}
+      text={chap.displayName}
+    />
+  );
 
-    
+  const ChapterSelectComponent = Select.ofType<IChapter>();
+  
+  
 
-    chapterRenderer: ItemRenderer<IChapter> = (chap) => (
-        <MenuItem active={false} key={chap.chapter} onClick={() => this.props.handleUpdateChapter(chap.chapter)} text={chap.displayName} />
-    );
-   
-    ChapterSelectComponent = Select.ofType<IChapter>();
-
-
-    chapSelect = (
+  const chapSelect = (
     currentChap: number,
-    handleSelect = (i: IChapter, e: React.ChangeEvent<HTMLSelectElement>) => {}
+    handleSelect = (i: IChapter) => {}
   ) => (
-    <this.ChapterSelectComponent
+    <ChapterSelectComponent
       className={Classes.MINIMAL}
-      items={this.chapters}
+      items={chapters}
       onItemSelect={handleSelect}
-      itemRenderer={this.chapterRenderer}
+      itemRenderer={chapterRenderer}
       filterable={false}
     >
       <Button
         className={Classes.MINIMAL}
-        text={this.styliseChapter(currentChap)}
+        text={styliseChapter(currentChap)}
         rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
       />
-    </this.ChapterSelectComponent>
+     </ChapterSelectComponent>
   );
 
+  
 
-    public render() {
-        return (
-            <div> {this.chapSelect(this.props.sourceChapter, () => {} )} </div>
-        )
-    }
+  
+  // public constructor(props: IChapterProps) {
+  //   super(props);
+    
+  // }
+
+  
+
+  
+
+  
+
+  // public render() {
+    return <div> {chapSelect(props.sourceChapter, props.handleUpdateChapter)} </div>;
+  // }
+
+  
 }
 
-export default DefaultChapter;
+// export default DefaultChapter;

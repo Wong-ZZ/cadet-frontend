@@ -47,5 +47,4 @@ export function ChapterSelect(props: ChapterSelectProps) {
   );
 
   return chapSelect(props.sourceChapter, props.handleChapterSelect);
-  
 }

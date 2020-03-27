@@ -47,7 +47,6 @@ function* backendSaga(): SagaIterator {
     yield history.push('/academy');
   });
 
-  
   yield takeEvery(actionTypes.FETCH_CHAPTER, function*() {
     const tokens = yield select((state: IState) => ({
       accessToken: state.session.accessToken,
@@ -60,7 +59,6 @@ function* backendSaga(): SagaIterator {
     if (chap) {
       yield put(actions.updateChapter(chap));
     }
-
   });
 
   yield takeEvery(actionTypes.CHANGE_DEFAULT_CHAPTER, function*(
@@ -74,14 +72,13 @@ function* backendSaga(): SagaIterator {
     const chap = action.payload.chapterno;
     const resp: Response = yield request.changeDefaultChapter(chap, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
 
     yield put(actions.updateChapter(chap));
     yield call(showSuccessMessage, 'Updated successfully!', 1000);
-
   });
 
   yield takeEvery(actionTypes.CHANGE_DATE_ASSESSMENT, function*(
@@ -96,7 +93,7 @@ function* backendSaga(): SagaIterator {
     const openAt = action.payload.openAt;
     const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
@@ -118,7 +115,6 @@ function* backendSaga(): SagaIterator {
     }
   });
 
-
   yield takeEvery(actionTypes.FETCH_ASSESSMENT_OVERVIEWS, function*() {
     const tokens = yield select((state: IState) => ({
       accessToken: state.session.accessToken,
@@ -130,7 +126,6 @@ function* backendSaga(): SagaIterator {
     }
   });
 
-
   yield takeEvery(actionTypes.DELETE_ASSESSMENT, function*(
     action: ReturnType<typeof actions.deleteAssessment>
   ) {
@@ -141,7 +136,7 @@ function* backendSaga(): SagaIterator {
     const id = action.payload;
     const resp: Response = yield request.deleteAssessment(id, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
@@ -162,7 +157,7 @@ function* backendSaga(): SagaIterator {
     const openAt = action.payload.openAt;
     const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
@@ -182,18 +177,18 @@ function* backendSaga(): SagaIterator {
     const bool = action.payload.bool;
     const resp: Response = yield request.publishAssessment(id, bool, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
 
     yield put(actions.fetchAssessmentOverviews());
 
-    if(bool) {
+    if (bool) {
       yield call(showSuccessMessage, 'Published successfully!', 1000);
     } else {
       yield call(showSuccessMessage, 'Unpublished successfully!', 1000);
-    }    
+    }
   });
 
   yield takeEvery(actionTypes.UPLOAD_ASSESSMENT, function*(
@@ -206,7 +201,7 @@ function* backendSaga(): SagaIterator {
     const file = action.payload;
     const resp: Response = yield request.uploadAssessment(file, tokens);
 
-    if(!resp || !resp.ok) {
+    if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }

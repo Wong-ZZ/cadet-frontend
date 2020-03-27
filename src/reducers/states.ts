@@ -240,7 +240,7 @@ export const defaultApplication: IApplicationState = {
 };
 
 export const defaultPlayground: IPlaygroundState = {
-  usingSubst: false,
+  usingSubst: false
 };
 
 export const defaultEditorValue = '// Type your program in here!';

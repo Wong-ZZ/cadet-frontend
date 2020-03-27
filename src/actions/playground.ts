@@ -9,7 +9,3 @@ export const toggleUsingSubst = (usingSubst: boolean) =>
 
 export const changeQueryString = (queryString: string) =>
   action(actionTypes.CHANGE_QUERY_STRING, queryString);
-
-    
-  
-  

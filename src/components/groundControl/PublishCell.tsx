@@ -16,18 +16,18 @@ interface IPublishCellState {
 }
 
 class PublishCell extends React.Component<IPublishCellProps, IPublishCellState> {
-  
   public constructor(props: IPublishCellProps) {
     super(props);
     this.state = {
       dialogOpen: false,
-      is_published: this.props.data.is_published === undefined ? false : this.props.data.is_published
+      is_published:
+        this.props.data.is_published === undefined ? false : this.props.data.is_published
     };
   }
 
   public render() {
-      const text = this.props.data.is_published ? "Unpublish" : "Publish";
-      const lowerText = text.charAt(0).toLowerCase() + text.substring(1);
+    const text = this.props.data.is_published ? 'Unpublish' : 'Publish';
+    const lowerText = text.charAt(0).toLowerCase() + text.substring(1);
     return (
       <div>
         <this.toggleButton />
@@ -35,13 +35,11 @@ class PublishCell extends React.Component<IPublishCellProps, IPublishCellState> 
           icon="info-sign"
           isOpen={this.state.dialogOpen}
           onClose={this.handleCloseDialog}
-          title={text + " Assessment"}
+          title={text + ' Assessment'}
           canOutsideClickClose={true}
         >
           <div className={Classes.DIALOG_BODY}>
-            {(
-              <p>Are you sure to {lowerText} this Assessment?</p>
-            )}
+            {<p>Are you sure to {lowerText} this Assessment?</p>}
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -56,7 +54,7 @@ class PublishCell extends React.Component<IPublishCellProps, IPublishCellState> 
 
   private toggleButton = () => {
     return <Switch checked={this.state.is_published} onChange={this.handleOpenDialog} />;
-  }
+  };
   private handleCloseDialog = () => this.setState({ dialogOpen: false });
   private handleOpenDialog = () => this.setState({ dialogOpen: true });
   private handleDelete = () => {
@@ -64,8 +62,6 @@ class PublishCell extends React.Component<IPublishCellProps, IPublishCellState> 
     this.props.handlePublishAssessment(!data.is_published, data.id);
     this.handleCloseDialog();
   };
-  
-  
 }
 
 export default PublishCell;
