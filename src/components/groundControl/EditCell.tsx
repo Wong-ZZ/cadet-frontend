@@ -4,11 +4,11 @@ import { IconNames } from '@blueprintjs/icons';
 import * as React from 'react';
 
 import { controlButton } from '../commons';
-import { IGroundControlAssessmentOverview } from './GroundControl';
+import{ IGroundControlAssessmentOverview } from './GroundControl';
 
 interface IEditCellProps {
   data: IGroundControlAssessmentOverview;
-  handleAssessmentChangeDate: (id: number, openAt: string, closeAt: string) => void;
+  handleAssessmentChangeDate: (id:number, openAt: string, closeAt: string) => void;
   forOpenDate: boolean;
 }
 
@@ -38,8 +38,8 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
   }
 
   public render() {
-    const fieldName = this.props.forOpenDate ? 'Opening' : 'Closing';
-    const dateInputKey = this.props.forOpenDate ? 'openAt' : 'closeAt';
+    const fieldName = this.props.forOpenDate ? "Opening" : "Closing";
+    const dateInputKey = this.props.forOpenDate ? "openAt" : "closeAt";
     return (
       <div>
         {this.props.forOpenDate ? this.props.data.prettyOpenAt : this.props.data.prettyCloseAt}
@@ -52,7 +52,7 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
           canOutsideClickClose={true}
         >
           <div className={Classes.DIALOG_BODY}>
-            {fieldName} Date: {<this.dateInput dateInputKey={dateInputKey} />}
+            {fieldName} Date: {<this.dateInput dateInputKey={dateInputKey}/>}
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>

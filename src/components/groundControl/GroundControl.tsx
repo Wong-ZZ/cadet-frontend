@@ -12,10 +12,6 @@ import Dropzone from './Dropzone';
 import EditCell from './EditCell';
 import PublishCell from './PublishCell';
 
-// import {
-//     ChapterSelect,
-//   } from '../workspace/controlBar/index';
-
 export interface IDispatchProps {
   handleAssessmentOverviewFetch: () => void;
   handleDeleteAssessment: (id: number) => void;
@@ -30,10 +26,15 @@ export interface IGroundControlAssessmentOverview extends IAssessmentOverview {
 }
 
 export interface IStateProps {
-  assessmentOverviews: IGroundControlAssessmentOverview[];
+    assessmentOverviews: IGroundControlAssessmentOverview[];
 }
 
 export interface IGroundControlProps extends IDispatchProps, IStateProps {}
+
+export interface IGroundControlAssessmentOverview extends IAssessmentOverview {
+  prettyOpenAt?: string;
+  prettyCloseAt?: string;
+}
 
 class GroundControl extends React.Component<IGroundControlProps, {}> {
   private columnDefs: ColDef[];
