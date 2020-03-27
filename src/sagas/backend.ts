@@ -61,6 +61,11 @@ function* backendSaga(): SagaIterator {
 
   yield takeEvery(actionTypes.CHANGE_DEFAULT_CHAPTER, function*(
     action: ReturnType<typeof actions.changeDefaultChapter>
+  ) {
+    const tokens = yield select((state: IState) => ({
+      accessToken: state.session.accessToken,
+      refreshToken: state.session.refreshToken
+    }));
     const chap = action.payload.chapterno;
     const resp: Response = yield request.changeDefaultChapter(chap, tokens);
     if (!resp || !resp.ok) {

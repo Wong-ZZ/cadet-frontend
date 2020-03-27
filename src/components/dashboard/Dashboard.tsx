@@ -26,6 +26,7 @@ export interface IDispatchProps {
 
 export interface IStateProps {
   gradingOverviews: GradingOverview[];
+  groupAvengers: object;
 }
 
 export type LeaderBoardInfo = {

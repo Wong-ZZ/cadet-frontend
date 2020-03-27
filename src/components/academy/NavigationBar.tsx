@@ -86,7 +86,7 @@ const NavigationBar: React.SFC<OwnProps> = props => (
     {props.role === Role.Admin || props.role === Role.Staff ? (
       <NavbarGroup align={Alignment.RIGHT}>
 
-         <DefaultChapter></DefaultChapter>
+         <DefaultChapter/>
 
          <NavLink
           to={'/academy/groundcontrol'}

@@ -4,9 +4,9 @@ import { bindActionCreators, Dispatch } from 'redux';
 
 import { changeDefaultChapter, fetchChapter } from '../actions';
 
-import { DefaultChapter, IDispatchProps, IStateProps } from '../components/academy/DefaultChapter';
+import { DefaultChapter, IDispatchProps, IStateProps } from '../components/academy/defaultChapter';
+import { IChapter } from '../components/workspace/controlBar';
 import { IState } from '../reducers/states';
-import { IChapter } from 'src/components/workspace/controlBar';
 
 const mapStateToProps: MapStateToProps<IStateProps, {}, IState> = state => ({
   sourceChapter: state.workspaces.playground.context.chapter
