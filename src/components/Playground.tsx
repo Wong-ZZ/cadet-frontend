@@ -67,10 +67,10 @@ export interface IStateProps {
   sideContentHeight?: number;
   sharedbAceInitValue: string;
   sharedbAceIsInviting: boolean;
-  sourceChapter: number;
   websocketStatus: number;
   externalLibraryName: string;
   usingSubst: boolean;
+  sourceChapter: number;
 }
 
 export interface IDispatchProps {
@@ -101,6 +101,7 @@ export interface IDispatchProps {
   handleDebuggerResume: () => void;
   handleDebuggerReset: () => void;
   handleToggleEditorAutorun: () => void;
+  handleFetchChapter: () => void;
 }
 
 type PlaygroundState = {
@@ -122,6 +123,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
     };
     this.handlers.goGreen = this.toggleIsGreen.bind(this);
     (window as any).thePlayground = this;
+    this.props.handleFetchChapter();
   }
 
   public render() {
@@ -160,6 +162,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       }
       this.props.handleChapterSelect(chapter);
     };
+
     const chapterSelect = (
       <ChapterSelect
         handleChapterSelect={chapterSelectHandler}
@@ -236,6 +239,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       // Enable Face API Display only when 'MACHINELEARNING' is selected
       tabs.push(FaceapiDisplayTab);
     }
+
     if (this.props.sourceChapter >= 2) {
       // Enable Data Visualizer for Source Chapter 2 and above
       tabs.push(listVisualizerTab);
@@ -245,7 +249,6 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       tabs.push(inspectorTab);
       tabs.push(envVisualizerTab);
     }
-
     if (this.props.sourceChapter <= 2) {
       tabs.push(substVisualizerTab);
     }
@@ -312,6 +315,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       handleEditorWidthChange: this.props.handleEditorWidthChange,
       handleSideContentHeightChange: this.props.handleSideContentHeightChange,
       replProps: {
+        sourceChapter: this.props.sourceChapter,
         output: this.props.output,
         replValue: this.props.replValue,
         handleBrowseHistoryDown: this.props.handleBrowseHistoryDown,

@@ -12,6 +12,10 @@ import Dropzone from './Dropzone';
 import EditCell from './EditCell';
 import PublishCell from './PublishCell';
 
+// import {
+//     ChapterSelect,
+//   } from '../workspace/controlBar/index';
+
 export interface IDispatchProps {
   handleAssessmentOverviewFetch: () => void;
   handleDeleteAssessment: (id: number) => void;

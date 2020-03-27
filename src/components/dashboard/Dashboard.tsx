@@ -26,7 +26,6 @@ export interface IDispatchProps {
 
 export interface IStateProps {
   gradingOverviews: GradingOverview[];
-  groupAvengers: object;
 }
 
 export type LeaderBoardInfo = {
@@ -129,7 +128,6 @@ class Dashboard extends React.Component<IDashboardProps, State> {
       }
       const currentEntry = filteredData[index];
       const gradingStatus = current.gradingStatus;
-
       if (current.submissionStatus !== 'submitted') {
         continue;
       }

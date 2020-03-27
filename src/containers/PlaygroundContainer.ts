@@ -18,6 +18,7 @@ import {
   evalEditor,
   evalRepl,
   externalLibrarySelect,
+  fetchChapter,
   finishInvite,
   generateLzString,
   initInvite,
@@ -33,6 +34,7 @@ import {
   WorkspaceLocation,
   WorkspaceLocations
 } from '../actions';
+
 import { ExternalLibraryName } from '../components/assessment/assessmentShape';
 import Playground, { IDispatchProps, IStateProps } from '../components/Playground';
 import { IState, SideContentType } from '../reducers/states';
@@ -99,7 +101,8 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleUsingSubst: (usingSubst: boolean) => toggleUsingSubst(usingSubst),
       handleDebuggerPause: () => beginDebuggerPause(workspaceLocation),
       handleDebuggerResume: () => debuggerResume(workspaceLocation),
-      handleDebuggerReset: () => debuggerReset(workspaceLocation)
+      handleDebuggerReset: () => debuggerReset(workspaceLocation),
+      handleFetchChapter: () => fetchChapter()
     },
     dispatch
   );

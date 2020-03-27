@@ -548,6 +548,7 @@ export async function getSourcecastIndex(tokens: Tokens): Promise<ISourcecastDat
     shouldAutoLogout: false,
     shouldRefresh: true
   });
+
   if (!resp || !resp.ok) {
     return null;
   }
@@ -672,6 +673,40 @@ export const postMaterialFolder = async (title: string, parentId: number, tokens
   });
   return resp;
 };
+
+/**
+ * GET /chapter
+ */
+export async function fetchChapter(tokens: Tokens): Promise<number | null> {
+  const resp = await request('chapter', 'GET', {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    noHeaderAccept: true,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+
+  if (!resp || !resp.ok) {
+    return null;
+  }
+
+  return await resp.json();
+}
+
+/**
+ * POST /chapter/update/1
+ */
+export async function changeDefaultChapter(chapterno: number, tokens: Tokens) {
+  const resp = await request(`chapter/update/1`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: { chapterno },
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
+}
 
 /**
  * @returns {(Response|null)} Response if successful, otherwise null.

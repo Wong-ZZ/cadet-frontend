@@ -7,6 +7,7 @@ import {
   fetchAssessmentOverviews,
   publishAssessment,
   uploadAssessment
+  // fetchChapter
 } from '../../actions/session';
 import GroundControl, {
   IDispatchProps,
@@ -26,6 +27,7 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleUploadAssessment: uploadAssessment,
       handlePublishAssessment: publishAssessment,
       handleAssessmentChangeDate: changeDateAssessment
+      // handleChapterSelect: fetchAssessmentOverviews
     },
     dispatch
   );
