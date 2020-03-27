@@ -32,8 +32,7 @@ import {
   updateReplValue,
   WorkspaceLocation,
   WorkspaceLocations,
-  fetchChapter,
-  // updateChapter
+  fetchChapter
 } from '../actions';
 
 import { ExternalLibraryName } from '../components/assessment/assessmentShape';
@@ -57,14 +56,12 @@ const mapStateToProps: MapStateToProps<IStateProps, {}, IState> = state => ({
   sharedbAceIsInviting: state.workspaces.playground.sharedbAceIsInviting,
   sharedbAceInitValue: state.workspaces.playground.sharedbAceInitValue,
   sideContentHeight: state.workspaces.playground.sideContentHeight,
-  // sourceChapter: state.workspaces.playground.context.chapter,
-  // sourceChapter: (Number) (fetchChapter().valueOf()),
-  sourceChapter: state.playground.sourceChapter,
+  sourceChapter: state.workspaces.playground.context.chapter,
   websocketStatus: state.workspaces.playground.websocketStatus,
   externalLibraryName: state.workspaces.playground.externalLibrary,
   usingSubst: state.playground.usingSubst
 });
-// console.log((fetchChapter()));
+
 const workspaceLocation: WorkspaceLocation = WorkspaceLocations.playground;
 
 const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Dispatch<any>) =>
@@ -106,8 +103,6 @@ const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Di
       handleDebuggerResume: () => debuggerResume(workspaceLocation),
       handleDebuggerReset: () => debuggerReset(workspaceLocation),
       handleFetchChapter: () => fetchChapter(),
-      // handleUpdateChapter: (chapterno: number) => updateChapter(chapterno)
-      
     },
     dispatch
   );

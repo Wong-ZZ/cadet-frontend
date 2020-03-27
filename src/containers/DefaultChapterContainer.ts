@@ -4,28 +4,24 @@ import { bindActionCreators, Dispatch } from 'redux';
 
 import {
   fetchChapter,
-  // updateChapter
+  changeDefaultChapter
 } from '../actions';
 
-// import { ExternalLibraryName } from '../components/assessment/assessmentShape';
-import DefaultChapter, { IStateProps, IDispatchProps} from '../components/academy/defaultChapter';
+import DefaultChapter, { IStateProps, IDispatchProps} from '../components/academy/DefaultChapter';
 import { IState} from '../reducers/states';
 
+
 const mapStateToProps: MapStateToProps<IStateProps, {}, IState> = state => ({
-  
-  sourceChapter: state.playground.sourceChapter,
-  
+  sourceChapter: state.workspaces.playground.context.chapter
+
 });
-// console.log((fetchChapter()));
 
 
 const mapDispatchToProps: MapDispatchToProps<IDispatchProps, {}> = (dispatch: Dispatch<any>) =>
   bindActionCreators(
     {
-      
       handleFetchChapter: () => fetchChapter(),
-      // handleUpdateChapter: (chapterno: number) => updateChapter(chapterno)
-      
+      handleUpdateChapter: (chapterno: number) => changeDefaultChapter(chapterno)
     },
     dispatch
   );

@@ -10,13 +10,6 @@ export const toggleUsingSubst = (usingSubst: boolean) =>
 export const changeQueryString = (queryString: string) =>
   action(actionTypes.CHANGE_QUERY_STRING, queryString);
 
-export const fetchChapter = () => action(actionTypes.FETCH_CHAPTER);
-
-  export const updateChapter = (
-    chapterno: number,
-    // index: ISourcecastData[],
-    // workspaceLocation: WorkspaceLocation
-  ) => 
-    action(actionTypes.UPDATE_CHAPTER_NUMBER, chapterno);
+    
   
   

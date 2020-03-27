@@ -54,7 +54,6 @@ const baseProps = {
   handleDebuggerResume: () => {},
   handleDebuggerReset: () => {},
   handleFetchChapter: () => {},
-  // handleUpdateChapter: (chapterNo: number) => {}
 };
 
 const testValueProps: IPlaygroundProps = {

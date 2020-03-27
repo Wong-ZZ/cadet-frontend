@@ -46,7 +46,6 @@ export interface IApplicationState {
 export interface IPlaygroundState {
   readonly queryString?: string;
   readonly usingSubst: boolean;
-  readonly sourceChapter: number;
 }
 
 interface IAssessmentWorkspace extends IWorkspaceState {
@@ -242,7 +241,6 @@ export const defaultApplication: IApplicationState = {
 
 export const defaultPlayground: IPlaygroundState = {
   usingSubst: false,
-  sourceChapter: 4
 };
 
 export const defaultEditorValue = '// Type your program in here!';

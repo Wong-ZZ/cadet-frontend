@@ -11,7 +11,7 @@ export interface IChapterProps extends IDispatchProps, IStateProps, RouteCompone
 
 export type IDispatchProps = {
     handleFetchChapter: () => void;
-    // handleUpdateChapter: (chapterno: number) => updateChapter(chapterno);
+    handleUpdateChapter: (chapterno: number) => void;
 };
 
 export interface IStateProps {
@@ -20,7 +20,7 @@ export interface IStateProps {
 
 export interface IChapter {
     chapter: number;
-   displayName: string;
+    displayName: string;
 }
 
 class DefaultChapter extends React.Component<IChapterProps, {}> {
@@ -29,23 +29,21 @@ class DefaultChapter extends React.Component<IChapterProps, {}> {
         this.props.handleFetchChapter();
     }
     
-
-    styliseChapter = (chap: number) => `Source \xa7${chap}`;
+    private styliseChapter = (chap: number) => `Source \xa7${chap}`;
 
     chapters = sourceChapters.map(chap => ({
         displayName: this.styliseChapter(chap),
         chapter: chap
     }));
 
-    chapterRenderer: ItemRenderer<IChapter> = (chap, { handleClick }) => (
-        <MenuItem active={false} key={chap.chapter} onClick={handleClick} text={chap.displayName} />
+    
+
+    chapterRenderer: ItemRenderer<IChapter> = (chap) => (
+        <MenuItem active={false} key={chap.chapter} onClick={() => this.props.handleUpdateChapter(chap.chapter)} text={chap.displayName} />
     );
    
     ChapterSelectComponent = Select.ofType<IChapter>();
 
-    updateChapter = () => {
-
-    }
 
     chapSelect = (
     currentChap: number,
@@ -68,50 +66,10 @@ class DefaultChapter extends React.Component<IChapterProps, {}> {
 
 
     public render() {
-
-        // function change to update
-        // get is done
-
         return (
             <div> {this.chapSelect(this.props.sourceChapter, () => {} )} </div>
         )
     }
-// export function DefaultChapter(props: ChapterSelectProps) {
-    
-//   const styliseChapter = (chap: number) => `Source \xa7${chap}`;
-//   const chapters = sourceChapters.map(chap => ({
-//     displayName: styliseChapter(chap),
-//     chapter: chap
-//   }));
-//   const chapterRenderer: ItemRenderer<IChapter> = (chap, { handleClick }) => (
-//     <MenuItem active={false} key={chap.chapter} onClick={handleClick} text={chap.displayName} />
-//   );
-//   const ChapterSelectComponent = Select.ofType<IChapter>();
-
-//   const handleSelect = ({ chapter }: { chapter: number }, e: any) => {}
-
-//   const chapSelect = (
-//     currentChap: number,
-//     // handleSelect = (i: IChapter, e: React.ChangeEvent<HTMLSelectElement>) => {}
-//   ) => (
-//     <ChapterSelectComponent
-//       className={Classes.MINIMAL}
-//       items={chapters}
-//       onItemSelect={handleSelect}
-//       itemRenderer={chapterRenderer}
-//       filterable={false}
-//     >
-//       <Button
-//         className={Classes.MINIMAL}
-//         text={styliseChapter(currentChap)}
-//         rightIcon={IconNames.DOUBLE_CARET_VERTICAL}
-//       />
-//     </ChapterSelectComponent>
-//   );
-
-//   return chapSelect(1);
-  //return chapSelect(props.sourceChapter, props.handleChapterSelect);
-  
 }
 
 export default DefaultChapter;

@@ -649,21 +649,9 @@ export const postMaterialFolder = async (title: string, parentId: number, tokens
   return resp;
 };
 
-
-
-// chapter
-// export async function getUser(tokens: Tokens): Promise<object | null> {
-//   const resp = await request('user', 'GET', {
-//     accessToken: tokens.accessToken,
-//     refreshToken: tokens.refreshToken,
-//     shouldRefresh: true
-//   });
-//   if (!resp || !resp.ok) {
-//     return null;
-//   }
-//   return await resp.json();
-// }
-
+/**
+ * GET /chapter
+ */
 export async function fetchChapter(tokens: Tokens): Promise<number | null>{
   
   const resp = await request('chapter', 'GET', {
@@ -673,7 +661,6 @@ export async function fetchChapter(tokens: Tokens): Promise<number | null>{
     shouldAutoLogout: false,
     shouldRefresh: true
   })
-
   
   if (!resp || !resp.ok) {
     return null;
@@ -682,74 +669,22 @@ export async function fetchChapter(tokens: Tokens): Promise<number | null>{
   return (await resp.json());
 }
 
-  // if (resp != null) {
-  //   resp.then(response => response.json());
-  // }
-
-  // if (resp && resp.ok) {
-  //   console.log(resp);
-  //   return await resp.json();
-   
-  // } else {
-  //   console.log("no resp");
-  //   return 3;
-  // }
-
-// export async function getAssessment(id: number, tokens: Tokens): Promise<IAssessment | null> {
-//   let resp = await request(`assessments/${id}`, 'POST', {
-//     accessToken: tokens.accessToken,
-//     refreshToken: tokens.refreshToken,
-//     shouldAutoLogout: false,
-//     shouldRefresh: true
-//   });
+/**
+ * POST /chapter/update/1
+ */
+export async function changeDefaultChapter(chapterno: number, tokens: Tokens) {
+  const resp = await request(`chapter/update/1`, 'POST', {
+    accessToken: tokens.accessToken,
+    body: { chapterno },
+    noHeaderAccept: true,
+    refreshToken: tokens.refreshToken,
+    shouldAutoLogout: false,
+    shouldRefresh: true
+  });
+  return resp;
+}
 
 
-// export const fetchChapter = async () => {
-  
-//   const resp = await request('chapter', 'GET', {
-//     noHeaderAccept: true,
-//     shouldAutoLogout: false,
-//     shouldRefresh: true
-//   });
-//   if (resp != null) {
-    
-//     return resp.json();
-//   } else {
-//     return 1;
-//   }
-// }
-
-// export const uploadAssessment = async (
-//   file: File,
-//   tokens: Tokens
-// ) => {
-//   const formData = new FormData();
-//   formData.append('assessment[file]', file);
-//   const resp = await request(`assessments`, 'POST', {
-//     accessToken: tokens.accessToken,
-//     body: formData,
-//     noContentType: true,
-//     noHeaderAccept: true,
-//     refreshToken: tokens.refreshToken,
-//     shouldAutoLogout: false,
-//     shouldRefresh: true
-//   });
-//   return resp;
-// };
-
-
-
-// export async function changeDateAssessment(id: number, closeAt: string, openAt: string, tokens: Tokens) {
-//   const resp = await request(`assessments/update/${id}`, 'POST', {
-//     accessToken: tokens.accessToken,
-//     body: { closeAt, openAt },
-//     noHeaderAccept: true,
-//     refreshToken: tokens.refreshToken,
-//     shouldAutoLogout: false,
-//     shouldRefresh: true
-//   });
-//   return resp;
-// }
 
 /**
  * @returns {(Response|null)} Response if successful, otherwise null.
