@@ -1,14 +1,11 @@
 import * as React from 'react';
-import AceEditor, { Annotation } from 'react-ace';
+import AceEditor, { IAnnotation } from 'react-ace';
 import { HotKeys } from 'react-hotkeys';
 import sharedbAce from 'sharedb-ace';
 
-import 'brace/ext/language_tools';
-import 'brace/ext/searchbox';
-import 'js-slang/dist/editors/ace/modes/source1';
-import 'js-slang/dist/editors/ace/modes/source2';
-import 'js-slang/dist/editors/ace/modes/source3';
-import 'js-slang/dist/editors/ace/modes/source4';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ext-searchbox';
+import { HighlightRulesSelector, ModeSelector } from 'js-slang/dist/editors/ace/modes/source';
 import 'js-slang/dist/editors/ace/theme/source';
 import { LINKS } from '../../utils/constants';
 import { checkSessionIdExists } from './collabEditing/helper';
@@ -42,7 +39,7 @@ class Editor extends React.PureComponent<IEditorProps, {}> {
   public ShareAce: any;
   public AceEditor: React.RefObject<AceEditor>;
   private onChangeMethod: (newCode: string) => void;
-  private onValidateMethod: (annotations: Annotation[]) => void;
+  private onValidateMethod: (annotations: IAnnotation[]) => void;
 
   constructor(props: IEditorProps) {
     super(props);
@@ -54,7 +51,7 @@ class Editor extends React.PureComponent<IEditorProps, {}> {
       }
       this.props.handleEditorValueChange(newCode);
     };
-    this.onValidateMethod = (annotations: Annotation[]) => {
+    this.onValidateMethod = (annotations: IAnnotation[]) => {
       if (this.props.isEditorAutorun && annotations.length === 0) {
         this.props.handleEditorEval();
       }
@@ -103,6 +100,13 @@ class Editor extends React.PureComponent<IEditorProps, {}> {
 
     */
 
+    // navigation on key press
+    editor.commands.addCommand({
+      name: 'myCommand',
+      bindKey: { win: 'Ctrl-B', mac: 'Command-B' },
+      exec: this.handleNavigation
+    });
+
     editor.on('gutterclick', this.handleGutterClick);
 
     // Change all info annotations to error annotations
@@ -139,16 +143,13 @@ class Editor extends React.PureComponent<IEditorProps, {}> {
 
   // chapter selector used to choose the correct source mode
   public chapterNo = () => {
-    const chapter = this.props.sourceChapter;
-    if (chapter === 4) {
-      return 'source4';
-    } else if (chapter === 3) {
-      return 'source3';
-    } else if (chapter === 2) {
-      return 'source2';
-    } else {
-      return 'source1';
+    let chapter = this.props.sourceChapter;
+    if (chapter === undefined) {
+      chapter = 1;
     }
+    HighlightRulesSelector(chapter);
+    ModeSelector(chapter);
+    return 'source' + chapter.toString();
   };
 
   public render() {
@@ -182,16 +183,25 @@ class Editor extends React.PureComponent<IEditorProps, {}> {
             value={this.props.editorValue}
             width="100%"
             setOptions={{
-              fontFamily: "'Inconsolata', 'Consolas', monospace",
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: true
+              fontFamily: "'Inconsolata', 'Consolas', monospace"
             }}
           />
         </div>
       </HotKeys>
     );
   }
+
+  private handleNavigation = (editor: any) => {
+    const chapter = this.props.sourceChapter;
+    const pos = editor.selection.getCursor();
+    const token = editor.session.getTokenAt(pos.row, pos.column);
+    const url = LINKS.TEXTBOOK;
+    if (token !== null && /\bsupport.function\b/.test(token.type)) {
+      window.open(`${url}/source/source_${chapter}/global.html#${token.value}`); // opens the link
+    } else if (token !== null && /\bstorage.type\b/.test(token.type)) {
+      window.open(`${url}/source/source_${chapter}.pdf`);
+    }
+  };
 
   private handleGutterClick = (e: any) => {
     const target = e.domEvent.target;

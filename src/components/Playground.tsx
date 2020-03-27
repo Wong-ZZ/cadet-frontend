@@ -315,6 +315,7 @@ class Playground extends React.Component<IPlaygroundProps, PlaygroundState> {
       handleEditorWidthChange: this.props.handleEditorWidthChange,
       handleSideContentHeightChange: this.props.handleSideContentHeightChange,
       replProps: {
+        sourceChapter: this.props.sourceChapter,
         output: this.props.output,
         replValue: this.props.replValue,
         handleBrowseHistoryDown: this.props.handleBrowseHistoryDown,
