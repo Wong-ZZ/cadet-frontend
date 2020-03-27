@@ -21,6 +21,11 @@ export const fetchAnnouncements = () => action(actionTypes.FETCH_ANNOUNCEMENTS);
 
 export const fetchAssessment = (id: number) => action(actionTypes.FETCH_ASSESSMENT, id);
 
+export const fetchGroupAvengers = () => action(actionTypes.FETCH_GROUP_AVENGERS);
+
+export const updateGroupAvengers = (groupAvengers: object) =>
+  action(actionTypes.UPDATE_GROUP_AVENGERS, groupAvengers);
+
 export const publishAssessment = (bool: boolean, id: number) =>
   action(actionTypes.PUBLISH_ASSESSMENT, { id, bool });
 

@@ -52,10 +52,8 @@ function* backendSaga(): SagaIterator {
       accessToken: state.session.accessToken,
       refreshToken: state.session.refreshToken
     }));
-
     const chapterNo = yield call(request.fetchChapter, tokens);
     const chap = chapterNo.chapter.chapterno;
-
     if (chap) {
       yield put(actions.updateChapter(chap));
     }
@@ -63,67 +61,25 @@ function* backendSaga(): SagaIterator {
 
   yield takeEvery(actionTypes.CHANGE_DEFAULT_CHAPTER, function*(
     action: ReturnType<typeof actions.changeDefaultChapter>
-  ) {
-    const tokens = yield select((state: IState) => ({
-      accessToken: state.session.accessToken,
-      refreshToken: state.session.refreshToken
-    }));
-
     const chap = action.payload.chapterno;
     const resp: Response = yield request.changeDefaultChapter(chap, tokens);
-
     if (!resp || !resp.ok) {
       yield request.handleResponseError(resp);
       return;
     }
-
     yield put(actions.updateChapter(chap));
     yield call(showSuccessMessage, 'Updated successfully!', 1000);
   });
 
-  yield takeEvery(actionTypes.CHANGE_DATE_ASSESSMENT, function*(
-    action: ReturnType<typeof actions.changeDateAssessment>
+  yield takeEvery(actionTypes.FETCH_GROUP_AVENGERS, function*(
+    action: ReturnType<typeof actions.fetchGroupAvengers>
   ) {
     const tokens = yield select((state: IState) => ({
       accessToken: state.session.accessToken,
       refreshToken: state.session.refreshToken
     }));
-    const id = action.payload.id;
-    const closeAt = action.payload.closeAt;
-    const openAt = action.payload.openAt;
-    const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens);
-
-    if (!resp || !resp.ok) {
-      yield request.handleResponseError(resp);
-      return;
-    }
-
-    yield put(actions.fetchAssessmentOverviews());
-    yield call(showSuccessMessage, 'Updated successfully!', 1000);
-  });
-
-  yield takeEvery(actionTypes.FETCH_SOURCECAST_INDEX, function*(
-    action: ReturnType<typeof actions.fetchSourcecastIndex>
-  ) {
-    const tokens = yield select((state: IState) => ({
-      accessToken: state.session.accessToken,
-      refreshToken: state.session.refreshToken
-    }));
-    const sourcecastIndex = yield call(request.getSourcecastIndex, tokens);
-    if (sourcecastIndex) {
-      yield put(actions.updateSourcecastIndex(sourcecastIndex, action.payload.workspaceLocation));
-    }
-  });
-
-  yield takeEvery(actionTypes.FETCH_ASSESSMENT_OVERVIEWS, function*() {
-    const tokens = yield select((state: IState) => ({
-      accessToken: state.session.accessToken,
-      refreshToken: state.session.refreshToken
-    }));
-    const assessmentOverviews = yield call(request.getAssessmentOverviews, tokens);
-    if (assessmentOverviews) {
-      yield put(actions.updateAssessmentOverviews(assessmentOverviews));
-    }
+    const resp: Response = yield request.getGroupAvengers(tokens);
+    yield put(actions.updateGroupAvengers(resp));
   });
 
   yield takeEvery(actionTypes.DELETE_ASSESSMENT, function*(
@@ -155,10 +111,17 @@ function* backendSaga(): SagaIterator {
     const id = action.payload.id;
     const closeAt = action.payload.closeAt;
     const openAt = action.payload.openAt;
-    const resp: Response = yield request.changeDateAssessment(id, closeAt, openAt, tokens);
+    const errorMessageWrapper: string[] = ['Something went wrong'];
+    const resp: Response = yield request.changeDateAssessment(
+      id,
+      closeAt,
+      openAt,
+      tokens,
+      errorMessageWrapper
+    );
 
     if (!resp || !resp.ok) {
-      yield request.handleResponseError(resp);
+      yield call(showWarningMessage, errorMessageWrapper[0], 5000);
       return;
     }
 
@@ -199,10 +162,10 @@ function* backendSaga(): SagaIterator {
       refreshToken: state.session.refreshToken
     }));
     const file = action.payload;
-    const resp: Response = yield request.uploadAssessment(file, tokens);
-
+    const errorMessageWrapper = ['Something went wrong and I am not sure why'];
+    const resp: Response = yield request.uploadAssessment(file, tokens, errorMessageWrapper);
     if (!resp || !resp.ok) {
-      yield request.handleResponseError(resp);
+      yield call(showWarningMessage, errorMessageWrapper[0], 10000);
       return;
     }
 

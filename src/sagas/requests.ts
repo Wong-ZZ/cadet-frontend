@@ -103,11 +103,24 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
+export async function getGroupAvengers(tokens: Tokens): Promise<object | null> {
+  const resp = await request('user/groups', 'POST', {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+    shouldRefresh: true
+  });
+  if (!resp || !resp.ok) {
+    return null;
+  }
+  return await resp.json();
+}
+
 export async function changeDateAssessment(
   id: number,
   closeAt: string,
   openAt: string,
-  tokens: Tokens
+  tokens: Tokens,
+  errorMessageWrapper: string[]
 ) {
   const resp = await request(`assessments/update/${id}`, 'POST', {
     accessToken: tokens.accessToken,
@@ -117,6 +130,9 @@ export async function changeDateAssessment(
     shouldAutoLogout: false,
     shouldRefresh: true
   });
+  if (resp && !resp.ok) {
+    await resp.text().then(errmsg => (errorMessageWrapper[0] = errmsg));
+  }
   return resp;
 }
 
@@ -143,7 +159,11 @@ export async function deleteAssessment(id: number, tokens: Tokens) {
   return resp;
 }
 
-export const uploadAssessment = async (file: File, tokens: Tokens) => {
+export const uploadAssessment = async (
+  file: File,
+  tokens: Tokens,
+  errorMessageWrapper: string[]
+) => {
   const formData = new FormData();
   formData.append('assessment[file]', file);
   const resp = await request(`assessments`, 'POST', {
@@ -155,6 +175,9 @@ export const uploadAssessment = async (file: File, tokens: Tokens) => {
     shouldAutoLogout: false,
     shouldRefresh: true
   });
+  if (resp && !resp.ok) {
+    await resp.text().then(errmsg => (errorMessageWrapper[0] = errmsg));
+  }
   return resp;
 };
 

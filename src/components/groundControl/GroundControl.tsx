@@ -22,12 +22,15 @@ export interface IDispatchProps {
   handleUploadAssessment: (file: File) => void;
   handlePublishAssessment: (bool: boolean, id: number) => void;
   handleAssessmentChangeDate: (id: number, openAt: string, closeAt: string) => void;
-  // handleChapterSelect: (chapter: number) => void;
+}
+
+export interface IGroundControlAssessmentOverview extends IAssessmentOverview {
+  prettyOpenAt?: string;
+  prettyCloseAt?: string;
 }
 
 export interface IStateProps {
-  assessmentOverviews: IAssessmentOverview[];
-  // sourceChapter?: number;
+  assessmentOverviews: IGroundControlAssessmentOverview[];
 }
 
 export interface IGroundControlProps extends IDispatchProps, IStateProps {}
@@ -45,22 +48,16 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
       },
       {
         headerName: 'Category',
-        field: 'category'
+        field: 'category',
+        width: 100
       },
       {
         headerName: 'Open Date',
-        field: 'prettyOpenAt'
-      },
-      {
-        headerName: 'Close Date',
-        field: 'prettyCloseAt'
-      },
-      {
-        headerName: 'Edit',
         field: '',
         cellRendererFramework: EditCell,
         cellRendererParams: {
-          handleAssessmentChangeDate: this.props.handleAssessmentChangeDate
+          handleAssessmentChangeDate: this.props.handleAssessmentChangeDate,
+          forOpenDate: true
         },
         width: 150,
         suppressSorting: true,
@@ -69,15 +66,22 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
         cellStyle: {
           padding: 0
         }
-        // hide: !this.props.handleDeleteAssessment
       },
       {
-        headerName: 'Max Grade',
-        field: 'maxGrade'
-      },
-      {
-        headerName: 'Max XP',
-        field: 'maxXp'
+        headerName: 'Close Date',
+        field: '',
+        cellRendererFramework: EditCell,
+        cellRendererParams: {
+          handleAssessmentChangeDate: this.props.handleAssessmentChangeDate,
+          forOpenDate: false
+        },
+        width: 150,
+        suppressSorting: true,
+        suppressMovable: true,
+        suppressMenu: true,
+        cellStyle: {
+          padding: 0
+        }
       },
       {
         headerName: 'Publish',
@@ -86,7 +90,7 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
         cellRendererParams: {
           handlePublishAssessment: this.props.handlePublishAssessment
         },
-        width: 150,
+        width: 100,
         suppressSorting: true,
         suppressMovable: true,
         suppressMenu: true,
@@ -102,7 +106,7 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
         cellRendererParams: {
           handleDeleteAssessment: this.props.handleDeleteAssessment
         },
-        width: 150,
+        width: 100,
         suppressSorting: true,
         suppressMovable: true,
         suppressMenu: true,
@@ -124,29 +128,6 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
   }
 
   public render() {
-    // const chapterSelectHandler = ({ chapter }: { chapter: number }, e: any) => {
-    //     // console.log(chapter);
-    //     // console.log(this.props.sourceChapter);
-    //     // if (
-    //     //   (chapter <= 2 && this.state.hasBreakpoints) ||
-    //     //   this.state.selectedTab === SideContentType.substVisualizer
-    //     // ) {
-    //     //   this.props.handleUsingSubst(true);
-    //     // }
-    //     // if (chapter > 2) {
-    //     //   this.props.handleReplOutputClear();
-    //     //   this.props.handleUsingSubst(false);
-    //     // }
-    //     this.props.handleChapterSelect(chapter);
-    //   };
-    //   const chapterSelect = (
-    //     <ChapterSelect
-    //       handleChapterSelect={chapterSelectHandler}
-    //       sourceChapter={this.props.sourceChapter == undefined ? 1 : this.props.sourceChapter}
-    //       key="chapter"
-    //     />
-    //   );
-
     const data = this.sortByCategory();
     const Grid = () => (
       <div className="GradingContainer">
@@ -179,7 +160,6 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
 
     return (
       <div>
-        {/* <div> {chapterSelect} </div> */}
         <ContentDisplay
           display={display}
           loadContentDispatch={this.props.handleAssessmentOverviewFetch}
