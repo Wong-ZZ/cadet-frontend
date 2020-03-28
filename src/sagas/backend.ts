@@ -52,6 +52,9 @@ function* backendSaga(): SagaIterator {
       accessToken: state.session.accessToken,
       refreshToken: state.session.refreshToken
     }));
+    if (!tokens.accessToken) {
+      return;
+    }
     const chapterNo = yield call(request.fetchChapter, tokens);
     const chap = chapterNo.chapter.chapterno;
     if (chap) {
