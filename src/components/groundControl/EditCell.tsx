@@ -21,10 +21,6 @@ interface IEditCellDateState {
   closeAt: Date;
 }
 
-interface IDateInputProps {
-  dateInputKey: keyof IEditCellDateState;
-}
-
 class EditCell extends React.Component<IEditCellProps, IEditCellState> {
   private maxDate = new Date(new Date(Date.now()).setFullYear(2100));
 
@@ -39,7 +35,6 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
 
   public render() {
     const fieldName = this.props.forOpenDate ? "Opening" : "Closing";
-    const dateInputKey = this.props.forOpenDate ? "openAt" : "closeAt";
     return (
       <div>
         {this.props.forOpenDate ? this.props.data.prettyOpenAt : this.props.data.prettyCloseAt}
@@ -52,7 +47,7 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
           canOutsideClickClose={true}
         >
           <div className={Classes.DIALOG_BODY}>
-            {fieldName} Date: {<this.dateInput dateInputKey={dateInputKey}/>}
+            {fieldName} Date: {this.dateInput()}
           </div>
           <div className={Classes.DIALOG_FOOTER}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>
@@ -65,16 +60,17 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
     );
   }
 
-  private dateInput = (props: IDateInputProps) => {
+  private dateInput = () => {
     return (
       <DateInput
         formatDate={this.formatDate}
-        onChange={this.handleDateChange(props.dateInputKey)}
+        onChange={this.handleDateChange}
         parseDate={this.parseDate}
-        value={props.dateInputKey === 'closeAt' ? this.state.closeAt : this.state.openAt}
+        value={this.props.forOpenDate ? this.state.openAt : this.state.closeAt}
         timePrecision={'minute'}
         fill={true}
         maxDate={this.maxDate}
+        closeOnSelection={false}
       />
     );
   };
@@ -83,11 +79,12 @@ class EditCell extends React.Component<IEditCellProps, IEditCellState> {
 
   private formatDate = (date: Date) => date.toLocaleString();
 
-  private handleDateChange = (key: keyof IEditCellState) => (selectedDate: Date) => {
-    this.setState(({ [key]: selectedDate } as unknown) as Pick<
-      IEditCellState,
-      keyof IEditCellState
-    >);
+  private handleDateChange = (selectedDate: Date) => {
+    if (this.props.forOpenDate) {
+      this.setState({openAt: selectedDate });
+    } else {
+      this.setState({closeAt: selectedDate });
+    }
   };
 
   private handleCloseDialog = () => this.setState({ dialogOpen: false });
