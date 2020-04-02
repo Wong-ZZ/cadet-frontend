@@ -162,7 +162,7 @@ export async function deleteAssessment(id: number, tokens: Tokens) {
 export const uploadAssessment = async (
   file: File,
   tokens: Tokens,
-  errorMessageWrapper: string[]
+  responseMessageWrapper: string[]
 ) => {
   const formData = new FormData();
   formData.append('assessment[file]', file);
@@ -175,8 +175,8 @@ export const uploadAssessment = async (
     shouldAutoLogout: false,
     shouldRefresh: true
   });
-  if (resp && !resp.ok) {
-    await resp.text().then(errmsg => (errorMessageWrapper[0] = errmsg));
+  if (resp) {
+    await resp.text().then(errmsg => (responseMessageWrapper[0] = errmsg));
   }
   return resp;
 };

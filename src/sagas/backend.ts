@@ -170,10 +170,10 @@ function* backendSaga(): SagaIterator {
       refreshToken: state.session.refreshToken
     }));
     const file = action.payload;
-    const errorMessageWrapper = ['Something went wrong and I am not sure why'];
-    const resp: Response = yield request.uploadAssessment(file, tokens, errorMessageWrapper);
-    if (!resp || !resp.ok) {
-      yield call(showWarningMessage, errorMessageWrapper[0], 10000);
+    const responseMessageWrapper = ['Something went wrong'];
+    const resp: Response = yield request.uploadAssessment(file, tokens, responseMessageWrapper);
+    if (!resp || responseMessageWrapper[0] !== "OK") {
+      yield call(showWarningMessage, responseMessageWrapper[0], 10000);
       return;
     }
 
