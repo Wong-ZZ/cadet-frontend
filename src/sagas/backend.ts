@@ -79,15 +79,15 @@ function* backendSaga(): SagaIterator {
     yield call(showSuccessMessage, 'Updated successfully!', 1000);
   });
 
-  yield takeEvery(actionTypes.FETCH_GROUP_AVENGERS, function*(
-    action: ReturnType<typeof actions.fetchGroupAvengers>
+  yield takeEvery(actionTypes.FETCH_GROUPS_INFO, function*(
+    action: ReturnType<typeof actions.fetchGroupsInfo>
   ) {
     const tokens = yield select((state: IState) => ({
       accessToken: state.session.accessToken,
       refreshToken: state.session.refreshToken
     }));
-    const resp: Response = yield request.getGroupAvengers(tokens);
-    yield put(actions.updateGroupAvengers(resp));
+    const resp: Response = yield request.getGroupsInfo(tokens);
+    yield put(actions.updateGroupsInfo(resp));
   });
 
   yield takeEvery(actionTypes.DELETE_ASSESSMENT, function*(

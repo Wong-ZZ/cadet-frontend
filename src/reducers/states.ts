@@ -144,7 +144,7 @@ export interface ISessionState {
 }
 
 export interface IDashBoardState {
-  readonly groupAvengers: object;
+  readonly groupsInfo: object;
 }
 
 type ReplHistory = {
@@ -394,7 +394,7 @@ export const defaultSession: ISessionState = {
 };
 
 export const defaultDashBoard: IDashBoardState = {
-  groupAvengers: {}
+  groupsInfo: {}
 };
 
 export const defaultState: IState = {

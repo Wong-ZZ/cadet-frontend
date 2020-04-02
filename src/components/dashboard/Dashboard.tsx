@@ -21,12 +21,12 @@ interface IDashboardProps extends IDispatchProps, IStateProps {}
 
 export interface IDispatchProps {
   handleFetchGradingOverviews: (filterToGroup?: boolean) => void;
-  handleFetchGroupAvengers: () => void;
+  handleFetchGroupsInfo: () => void;
 }
 
 export interface IStateProps {
   gradingOverviews: GradingOverview[];
-  groupAvengers: object;
+  groupsInfo: object;
 }
 
 export type LeaderBoardInfo = {
@@ -68,7 +68,7 @@ class Dashboard extends React.Component<IDashboardProps, State> {
   }
 
   public componentDidMount() {
-    this.props.handleFetchGroupAvengers();
+    this.props.handleFetchGroupsInfo();    
   }
 
   public componentDidUpdate(prevProps: IDashboardProps, prevState: State) {
@@ -113,32 +113,39 @@ class Dashboard extends React.Component<IDashboardProps, State> {
   }
 
   private updateLeaderBoard = () => {
-    const gradingOverview: GradingOverview[] = this.sortSubmissionsByGroup();
+    if (Object.keys(this.props.groupsInfo).length === 0) {
+        return [];
+    }
+    const gradingOverview: GradingOverview[] = this.filterSubmissionsByCategory();
     const filteredData: LeaderBoardInfo[] = [];
-    for (const current of gradingOverview) {
+    for (const current of gradingOverview) {      
+      if (current.submissionStatus !== 'submitted') {
+        continue;
+      }
       const groupName = current.groupName;
-      const index = parseInt(groupName.slice(5), 10);
+      // Keys for the groupsInfo object
+      const id = "id";
+      const avengerName = "avengerName";
+      const index = this.props.groupsInfo[groupName][id];
       if (filteredData[index] === undefined) {
         filteredData[index] = {
-          avengerName: this.props.groupAvengers[groupName],
+          avengerName: this.props.groupsInfo[groupName][avengerName],
           numOfUngradedMissions: 0,
           totalNumOfMissions: 0,
           numOfUngradedQuests: 0,
           totalNumOfQuests: 0
         };
       }
+
       const currentEntry = filteredData[index];
-      const gradingStatus = current.gradingStatus;
-      if (current.submissionStatus !== 'submitted') {
-        continue;
-      }
+      const gradingStatus = current.gradingStatus;      
 
       if (current.assessmentCategory === 'Mission') {
         if (gradingStatus === 'none' || gradingStatus === 'grading') {
           currentEntry.numOfUngradedMissions++;
         }
         currentEntry.totalNumOfMissions++;
-      } else if (current.assessmentCategory === 'Sidequest') {
+      } else {
         if (gradingStatus === 'none' || gradingStatus === 'grading') {
           currentEntry.numOfUngradedQuests++;
         }
@@ -148,20 +155,11 @@ class Dashboard extends React.Component<IDashboardProps, State> {
     return filteredData;
   };
 
-  private sortSubmissionsByGroup = () => {
+  private filterSubmissionsByCategory = () => {
     if (!this.props.gradingOverviews) {
       return [];
     }
     return (this.props.gradingOverviews as GradingOverview[])
-      .sort((subX, subY) => {
-        if (subX.groupName < subY.groupName) {
-          return -1;
-        } else if (subX.groupName === subY.groupName) {
-          return 0;
-        } else {
-          return 1;
-        }
-      })
       .filter(
         sub => sub.assessmentCategory === 'Sidequest' || sub.assessmentCategory === 'Mission'
       );

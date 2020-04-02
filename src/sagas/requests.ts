@@ -103,8 +103,8 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
   return await resp.json();
 }
 
-export async function getGroupAvengers(tokens: Tokens): Promise<object | null> {
-  const resp = await request('user/groups', 'POST', {
+export async function getGroupsInfo(tokens: Tokens): Promise<object | null> {
+  const resp = await request('/groups', 'GET', {
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
     shouldRefresh: true
