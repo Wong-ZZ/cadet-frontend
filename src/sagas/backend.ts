@@ -169,16 +169,22 @@ function* backendSaga(): SagaIterator {
       accessToken: state.session.accessToken,
       refreshToken: state.session.refreshToken
     }));
-    const file = action.payload;
+    const file = action.payload.file;
+    const forceUpdate = action.payload.forceUpdate;
     const responseMessageWrapper = ['Something went wrong'];
-    const resp: Response = yield request.uploadAssessment(file, tokens, responseMessageWrapper);
-    if (!resp || responseMessageWrapper[0] !== "OK") {
-      yield call(showWarningMessage, responseMessageWrapper[0], 10000);
-      return;
+    const resp: Response = yield request.uploadAssessment(file, tokens, responseMessageWrapper, forceUpdate);
+    if (resp) {
+      if (responseMessageWrapper[0] === "OK") {
+        yield call(showSuccessMessage, 'Uploaded successfully!', 2000);
+      } else if (responseMessageWrapper[0] === "Force Update OK") {
+        yield call(showSuccessMessage, 'Assessment force updated successfully!', 2000);
+      } else {
+        yield call(showWarningMessage, responseMessageWrapper[0], 10000);
+        return;
+      }
     }
 
     yield put(actions.fetchAssessmentOverviews());
-    yield call(showSuccessMessage, 'Uploaded successfully!', 1000);
   });
 
   yield takeEvery(actionTypes.FETCH_ASSESSMENT_OVERVIEWS, function*() {

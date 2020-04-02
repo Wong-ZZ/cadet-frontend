@@ -104,7 +104,7 @@ export async function getUser(tokens: Tokens): Promise<object | null> {
 }
 
 export async function getGroupsInfo(tokens: Tokens): Promise<object | null> {
-  const resp = await request('/groups', 'GET', {
+  const resp = await request('groups', 'GET', {
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
     shouldRefresh: true
@@ -162,10 +162,12 @@ export async function deleteAssessment(id: number, tokens: Tokens) {
 export const uploadAssessment = async (
   file: File,
   tokens: Tokens,
-  responseMessageWrapper: string[]
+  responseMessageWrapper: string[],
+  forceUpdate: boolean
 ) => {
   const formData = new FormData();
   formData.append('assessment[file]', file);
+  formData.append('forceUpdate', String(forceUpdate));
   const resp = await request(`assessments`, 'POST', {
     accessToken: tokens.accessToken,
     body: formData,

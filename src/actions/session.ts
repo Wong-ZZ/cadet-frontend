@@ -13,7 +13,7 @@ import { Role } from '../reducers/states';
 
 export const deleteAssessment = (id: number) => action(actionTypes.DELETE_ASSESSMENT, id);
 
-export const uploadAssessment = (file: File) => action(actionTypes.UPLOAD_ASSESSMENT, file);
+export const uploadAssessment = (file: File, forceUpdate: boolean) => action(actionTypes.UPLOAD_ASSESSMENT, {file, forceUpdate});
 
 export const fetchAuth = (luminusCode: string) => action(actionTypes.FETCH_AUTH, luminusCode);
 

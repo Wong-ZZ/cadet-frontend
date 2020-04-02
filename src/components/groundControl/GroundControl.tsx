@@ -15,7 +15,7 @@ import PublishCell from './PublishCell';
 export interface IDispatchProps {
   handleAssessmentOverviewFetch: () => void;
   handleDeleteAssessment: (id: number) => void;
-  handleUploadAssessment: (file: File) => void;
+  handleUploadAssessment: (file: File, forceUpdate: boolean) => void;
   handlePublishAssessment: (bool: boolean, id: number) => void;
   handleAssessmentChangeDate: (id: number, openAt: string, closeAt: string) => void;
 }
@@ -31,17 +31,21 @@ export interface IStateProps {
 
 export interface IGroundControlProps extends IDispatchProps, IStateProps {}
 
-export interface IGroundControlAssessmentOverview extends IAssessmentOverview {
-  prettyOpenAt?: string;
-  prettyCloseAt?: string;
+interface IGroundControlState {
+  forceUpdate: boolean;
+  displayConfirmation: boolean;
 }
 
-class GroundControl extends React.Component<IGroundControlProps, {}> {
+class GroundControl extends React.Component<IGroundControlProps, IGroundControlState> {
   private columnDefs: ColDef[];
   private gridApi?: GridApi;
 
   public constructor(props: IGroundControlProps) {
     super(props);
+    this.state = {
+        forceUpdate: false,
+        displayConfirmation: false
+    };
     this.columnDefs = [
       {
         headerName: 'Title',
@@ -154,7 +158,13 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
 
     const display = (
       <div>
-        <Dropzone handleUploadAssessment={this.props.handleUploadAssessment} />
+        <Dropzone 
+          handleUploadAssessment={this.handleUploadAssessment}
+          toggleForceUpdate={this.toggleForceUpdate}
+          toggleDisplayConfirmation={this.toggleDisplayConfirmation}
+          forceUpdate={this.state.forceUpdate}
+          displayConfirmation={this.state.displayConfirmation}
+        />
         <Grid />
       </div>
     );
@@ -176,17 +186,17 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
 
     const overview = this.props.assessmentOverviews.slice();
     return overview
-      .sort((subX, subY) => {
-        if (subX.category < subY.category) {
+      .sort((assessmentX, assessmentY) => {
+        if (assessmentX.category < assessmentY.category) {
           return -1;
-        } else if (subX.category === subY.category) {
+        } else if (assessmentX.category === assessmentY.category) {
           return 0;
         } else {
           return 1;
         }
       })
       .map(assessmentOverview => {
-        const clone = JSON.parse(JSON.stringify(assessmentOverview));
+        const clone: IGroundControlAssessmentOverview = JSON.parse(JSON.stringify(assessmentOverview));
         clone.prettyCloseAt = getPrettyDate(clone.closeAt);
         clone.prettyOpenAt = getPrettyDate(clone.openAt);
         return clone;
@@ -203,6 +213,19 @@ class GroundControl extends React.Component<IGroundControlProps, {}> {
       this.gridApi.sizeColumnsToFit();
     }
   };
+
+  private handleUploadAssessment = (file: File) => {
+    this.props.handleUploadAssessment(file, this.state.forceUpdate);
+    this.setState({forceUpdate: false});
+  }
+
+  private toggleForceUpdate = () => {
+    this.setState({forceUpdate: !this.state.forceUpdate});
+  }
+
+  private toggleDisplayConfirmation = () => {
+    this.setState({displayConfirmation: !this.state.displayConfirmation});
+  }
 }
 
 export default GroundControl;

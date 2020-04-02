@@ -1,4 +1,4 @@
-import { Card, Elevation } from '@blueprintjs/core';
+import { Card, Elevation, Switch } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FlexDirectionProperty } from 'csstype';
 import * as React from 'react';
@@ -6,9 +6,18 @@ import { useDropzone } from 'react-dropzone';
 
 import { controlButton } from '../commons';
 
-interface IDropzoneType {
+interface IDispatchProps {
   handleUploadAssessment: (file: File) => void;
+  toggleForceUpdate: () => void;
+  toggleDisplayConfirmation: ()=> void;
 }
+
+interface IStateProps {
+  forceUpdate: boolean;
+  displayConfirmation: boolean;
+}
+
+interface IDropzoneProps extends IDispatchProps, IStateProps {}
 
 // Dropzone styling
 const dropZoneStyle = {
@@ -43,7 +52,7 @@ const dropZoneStyle = {
   }
 };
 
-const MaterialDropzone: React.FC<IDropzoneType> = props => {
+const MaterialDropzone: React.FC<IDropzoneProps> = props => {
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
   const handleConfirmUpload = () => {
@@ -76,6 +85,38 @@ const MaterialDropzone: React.FC<IDropzoneType> = props => {
     [isDragActive, isDragAccept, isDragReject, isFocused]
   );
 
+  const handleToggleOnChange = () => {
+    if (!props.forceUpdate) {
+      props.toggleDisplayConfirmation();
+      props.toggleForceUpdate();
+    } else {
+      props.toggleForceUpdate();
+    }
+  };
+
+  const toggleButton = () => {
+    return <Switch checked={props.forceUpdate} onChange={handleToggleOnChange} />;
+  };
+
+  const handleConfirmForceUpdate = () => {
+    props.toggleDisplayConfirmation();
+  };
+
+  const handleCancelForceUpdate = () => {
+    props.toggleDisplayConfirmation();
+    props.toggleForceUpdate();
+  };
+
+  const confirmationMessage = () => {
+    return (
+      <div>
+        <p>Are you sure that you want to force update the assessment?</p>
+        {controlButton('Yes', IconNames.CONFIRM, handleConfirmForceUpdate)}
+        {controlButton('No', IconNames.CROSS, handleCancelForceUpdate)}
+      </div>
+    );
+  };
+
   return (
     <>
       <Card className="contentdisplay-content" elevation={Elevation.THREE}>
@@ -88,8 +129,13 @@ const MaterialDropzone: React.FC<IDropzoneType> = props => {
         <Card>
           <div>{title}</div>
           <br />
-          {controlButton('Confirm Upload', IconNames.UPLOAD, handleConfirmUpload)}
-          {controlButton('Cancel Upload', IconNames.DELETE, handleCancelUpload)}
+          {!props.displayConfirmation && controlButton('Confirm Upload', IconNames.UPLOAD, handleConfirmUpload)}
+          {!props.displayConfirmation && controlButton('Cancel Upload', IconNames.DELETE, handleCancelUpload)}
+          <br />
+          <br />
+          {!props.displayConfirmation && (<p>Force update opened assessment</p>)}
+          {props.displayConfirmation && confirmationMessage()}
+          {!props.displayConfirmation && toggleButton()}
         </Card>
       )}
     </>
